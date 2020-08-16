@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>8</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -12,5 +13,9 @@
     <ItemGroup>
         <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.1" />
         <PackageReference Include="Xamarin.Forms" Version="4.6.0.1073" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\Src\Particle.Forms\Particle.Forms.csproj" />
     </ItemGroup>
 </Project>
