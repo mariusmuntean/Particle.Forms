@@ -20,6 +20,8 @@ namespace Particle.Forms
             _stopwatch = new Stopwatch();
 
             _particleGenerator = new RandomParticleGenerator();
+            
+            // ToDo: SKPath GetPosition to create particle explosions  https://docs.microsoft.com/en-us/xamarin/xamarin-forms/user-interface/graphics/skiasharp/curves/information#traversing-the-path
         }
 
         public static readonly BindableProperty ParticlesPerSecondProperty = BindableProperty.Create(
