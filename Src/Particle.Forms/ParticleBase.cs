@@ -8,6 +8,9 @@ namespace Particle.Forms
         protected SKPoint InitialPosition;
         protected SKPoint3 InitialOrientation;
 
+        private long _absoluteElapsedMillisPrevious = 0;
+        private long _internalAbsoluteMillis = 0;
+
         public ParticleBase(SKPoint3 rotationSpeed, float translationSpeed, float direction, SKPoint3 orientation, SKPoint position, SKSize size)
         {
             RotationSpeed = rotationSpeed;
@@ -33,12 +36,22 @@ namespace Particle.Forms
         public SKPoint3 RotationSpeed { get; set; }
 
 
-        public virtual void Update(SKCanvas canvas, long elapsedMillis)
+        public virtual void Update(SKCanvas canvas, long absoluteElapsedMillis)
         {
+            var elapsedMillis = absoluteElapsedMillis - _absoluteElapsedMillisPrevious;
+            if (_absoluteElapsedMillisPrevious == 0)
+            {
+                _absoluteElapsedMillisPrevious = absoluteElapsedMillis;
+                return;
+            }
+
+            _internalAbsoluteMillis += elapsedMillis;
+            _absoluteElapsedMillisPrevious = absoluteElapsedMillis;
+
             canvas.Save();
 
             // Traversed distance speed x time
-            var dist = TranslationSpeed * elapsedMillis * 0.001;
+            var dist = TranslationSpeed * _internalAbsoluteMillis * 0.001;
 
             // New position
             var deg2radFactor = 0.0174533;
@@ -54,9 +67,9 @@ namespace Particle.Forms
             // New Orientation
             Orientation = InitialOrientation + new SKPoint3
             {
-                X = elapsedMillis * 0.001f * RotationSpeed.X,
-                Y = elapsedMillis * 0.001f * RotationSpeed.Y,
-                Z = elapsedMillis * 0.001f * RotationSpeed.Z
+                X = _internalAbsoluteMillis * 0.001f * RotationSpeed.X,
+                Y = _internalAbsoluteMillis * 0.001f * RotationSpeed.Y,
+                Z = _internalAbsoluteMillis * 0.001f * RotationSpeed.Z
             };
 
             var matrix44 = SKMatrix44.CreateIdentity();
@@ -139,7 +152,7 @@ namespace Particle.Forms
 
         protected override void Draw(SKCanvas canvas)
         {
-            canvas.DrawOval(Position.X, Position.Y, Size.Width, Size.Height, Paint);
+            canvas.DrawOval(Position.X, Position.Y, Size.Width / 2, Size.Height / 2, Paint);
         }
     }
 }

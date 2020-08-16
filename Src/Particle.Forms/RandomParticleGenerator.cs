@@ -24,55 +24,74 @@ namespace Particle.Forms
 
             for (var i = 0; i < amount; i++)
             {
-                particles[i] = GetRandomParticle(startPositions, amount, rand, i);
+                particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(0, 360),}, amount, rand, i);
+            }
+
+            return particles;
+        }
+        
+        public ParticleBase[] GenerateFallingParticles(SKPoint[] startPositions, int amount = 25)
+        {
+            var particles = new ParticleBase[amount];
+            var rand = new Random();
+
+            for (var i = 0; i < amount; i++)
+            {
+                particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(45, 135)}, amount, rand, i);
             }
 
             return particles;
         }
 
-        private RectParticle GetRandomParticle(SKPoint[] startPositions, int amount, Random rand, int i)
+        private RectParticle GetRandomParticle(SKPoint[] startPositions, DirectionRange[] directionRanges, int amount, Random rand, int i)
         {
-            return (rand.NextDouble() > 0.5d) switch
+            var directionRange = directionRanges[rand.Next(directionRanges.Length)];
+            var direction = (float) (directionRange.MinAngle + rand.NextDouble() * (directionRange.MaxAngle - directionRange.MinAngle));
+
+            var startPositionIndex = rand.Next(startPositions.Length);
+            var startPosition = startPositions[startPositionIndex];
+            
+            return (rand.NextDouble() > 0.35d) switch
             {
                 true => new RectParticle(
                     _defaultColors[rand.Next(0, _defaultColors.Length)],
                     new SKPoint3(
-                        (float) (rand.NextDouble() * 360.0f * 2.0f),
-                        (float) (rand.NextDouble() * 360.0f * 2.0f),
-                        (float) (rand.NextDouble() * 360.0f * 2.0f)
+                        (float) (rand.NextDouble() * 360.0f * 1.2),
+                        (float) (rand.NextDouble() * 360.0f * 1.2),
+                        (float) (rand.NextDouble() * 360.0f * 1.2)
                     ),
                     (float) (50.0f + rand.NextDouble() * 200),
-                    (float) (rand.NextDouble() * 360),
+                    direction,
                     new SKPoint3(
                         (float) (rand.NextDouble() * 360.0f),
                         (float) (rand.NextDouble() * 360.0f),
                         (float) (rand.NextDouble() * 360.0f)
                     ),
-                    startPositions[rand.Next(startPositions.Length)],
+                    startPosition,
                     new SKSize(
-                        (float) (2 + rand.NextDouble() * 20),
-                        (float) (2 + rand.NextDouble() * 20)
+                        (float) (6 + rand.NextDouble() * 16),
+                        (float) (6 + rand.NextDouble() * 16)
                     ),
                     (amount - i - 1) / amount * 6
                 ),
                 false => new EllipseParticle(
                     _defaultColors[rand.Next(0, _defaultColors.Length)],
                     new SKPoint3(
-                        (float) (rand.NextDouble() * 360.0f * 2.0f),
-                        (float) (rand.NextDouble() * 360.0f * 2.0f),
-                        (float) (rand.NextDouble() * 360.0f * 2.0f)
+                        (float) (rand.NextDouble() * 360.0f),
+                        (float) (rand.NextDouble() * 360.0f),
+                        (float) (rand.NextDouble() * 360.0f)
                     ),
                     (float) (50.0f + rand.NextDouble() * 200),
-                    (float) (rand.NextDouble() * 360),
+                    direction,
                     new SKPoint3(
                         (float) (rand.NextDouble() * 360.0f),
                         (float) (rand.NextDouble() * 360.0f),
                         (float) (rand.NextDouble() * 360.0f)
                     ),
-                    startPositions[rand.Next(startPositions.Length)],
+                    startPosition,
                     new SKSize(
-                        (float) (2 + rand.NextDouble() * 20),
-                        (float) (2 + rand.NextDouble() * 20)
+                        (float) (2 + rand.NextDouble() * 12),
+                        (float) (2 + rand.NextDouble() * 12)
                     ),
                     (amount - i - 1) / amount * 6
                 )
