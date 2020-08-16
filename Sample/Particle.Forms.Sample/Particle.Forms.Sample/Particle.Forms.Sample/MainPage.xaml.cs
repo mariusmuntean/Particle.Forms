@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Particle.Forms.Sample
@@ -12,6 +8,18 @@ namespace Particle.Forms.Sample
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        private void Button_OnClicked(object sender, EventArgs e)
+        {
+            if (MyParticleCanvas.IsActive)
+            {
+                MyParticleCanvas.Stop();
+            }
+            else
+            {
+                MyParticleCanvas.Start();
+            }
         }
     }
 }
