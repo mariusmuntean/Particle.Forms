@@ -7,7 +7,11 @@
              x:Class="Particle.Forms.Sample.MainPage">
 
     <StackLayout VerticalOptions="FillAndExpand" BackgroundColor="White">
-        <forms:ParticleCanvas x:Name="MyParticleCanvas" Margin="0, 20" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
+        <forms:ParticleCanvas x:Name="MyParticleCanvas" 
+                              ParticlesPerSecond="1"
+                              Margin="0, 20" 
+                              VerticalOptions="FillAndExpand" 
+                              HorizontalOptions="FillAndExpand" />
         <Button Text="Start/Stop" 
                 HorizontalOptions="Center" 
                 Clicked="Button_OnClicked" />

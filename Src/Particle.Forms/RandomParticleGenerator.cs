@@ -51,7 +51,7 @@ namespace Particle.Forms
             var startPositionIndex = rand.Next(startPositions.Length);
             var startPosition = startPositions[startPositionIndex];
             
-            return (rand.NextDouble() > 0.35d) switch
+            return (rand.NextDouble() > 0.45d) switch
             {
                 true => new RectParticle(
                     _defaultColors[rand.Next(0, _defaultColors.Length)],

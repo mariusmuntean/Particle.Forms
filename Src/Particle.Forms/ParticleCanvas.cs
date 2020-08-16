@@ -22,6 +22,19 @@ namespace Particle.Forms
             _particleGenerator = new RandomParticleGenerator();
         }
 
+        public static readonly BindableProperty ParticlesPerSecondProperty = BindableProperty.Create(
+            nameof(ParticlesPerSecond),
+            typeof(int),
+            typeof(ParticleCanvas),
+            1
+        );
+
+        public int ParticlesPerSecond
+        {
+            get => (int) GetValue(ParticlesPerSecondProperty);
+            set => SetValue(ParticlesPerSecondProperty, value);
+        }
+
         public bool IsActive { get; set; }
 
         public void Start()
@@ -33,19 +46,19 @@ namespace Particle.Forms
                 _totalElapsedMillis = _stopwatch.ElapsedMilliseconds;
 
                 _particles ??= new List<ParticleBase>();
-                
+
                 // Remove those out of view
                 _particles.RemoveAll(particle => !SKRect.Create(SKPoint.Empty, this.CanvasSize).Contains(SKRect.Create(particle.Position, particle.Size)));
-                
+
                 // Add fresh ones
                 var startPositionCount = 9;
                 var startPointSpacing = this.CanvasSize.Width / startPositionCount;
 
                 _particles.AddRange(_particleGenerator.GenerateFallingParticles(
                     Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
-                    1
+                    ParticlesPerSecond
                 ));
-                
+
 
                 if (!IsActive)
                 {
