@@ -26,6 +26,7 @@
                               x:Name="MyParticleCanvas"
                               TapParticleCount="100"
                               FallingParticlesPerSecond="60"
+                              DragParticleMoveType="Radiate"
                               Margin="0, 20"
                               VerticalOptions="FillAndExpand"
                               HorizontalOptions="FillAndExpand" />
