@@ -42,6 +42,7 @@ namespace Particle.Forms
                 case SKTouchAction.Pressed:
                     break;
                 case SKTouchAction.Moved:
+                    OnMoved(e);
                     break;
                 case SKTouchAction.Released:
                     OnTapped(e);
@@ -59,8 +60,39 @@ namespace Particle.Forms
             e.Handled = true;
         }
 
+        private void OnMoved(SKTouchEventArgs e)
+        {
+            if (!AddParticlesOnDrag)
+            {
+                return;
+            }
+
+            switch (DragParticleMoveType)
+            {
+                case ParticleMoveType.Fall:
+                    _particles.AddRange(_particleGenerator.GenerateFallingParticles(
+                        new[] {e.Location,},
+                        (int) Math.Ceiling(DragParticleCount / 60.0d)
+                    ));
+                    break;
+                case ParticleMoveType.Radiate:
+                    _particles.AddRange(_particleGenerator.Generate(
+                        new[] {e.Location,},
+                        (int) Math.Ceiling(DragParticleCount / 60.0d)
+                    ));
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         private void OnTapped(SKTouchEventArgs e)
         {
+            if (!AddParticlesOnTap)
+            {
+                return;
+            }
+
             _particles.AddRange(_particleGenerator.Generate(
                 new[] {e.Location},
                 TapParticleCount

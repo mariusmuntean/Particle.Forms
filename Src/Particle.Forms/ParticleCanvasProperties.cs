@@ -12,9 +12,10 @@ namespace Particle.Forms
             {
                 Start();
             }
-            else if (propertyName == AddParticlesOnTapProperty.PropertyName)
+            else if (propertyName == AddParticlesOnTapProperty.PropertyName
+                     || propertyName == AddParticlesOnDragProperty.PropertyName)
             {
-                if (AddParticlesOnTap)
+                if (AddParticlesOnTap || AddParticlesOnDrag)
                 {
                     Touch -= OnTouch;
                     EnableTouchEvents = true;
@@ -106,6 +107,55 @@ namespace Particle.Forms
         {
             get => (int) GetValue(TapParticleCountProperty);
             set => SetValue(TapParticleCountProperty, value);
+        }
+
+
+        public static readonly BindableProperty AddParticlesOnDragProperty = BindableProperty.Create(
+            nameof(AddParticlesOnDrag),
+            typeof(bool),
+            typeof(ParticleCanvas),
+            false
+        );
+
+        /// <summary>
+        /// Whether or not to add particles on drag.
+        /// </summary>
+        public bool AddParticlesOnDrag
+        {
+            get => (bool) GetValue(AddParticlesOnDragProperty);
+            set => SetValue(AddParticlesOnDragProperty, value);
+        }
+
+        public static readonly BindableProperty DragParticleCountProperty = BindableProperty.Create(
+            nameof(DragParticleCount),
+            typeof(int),
+            typeof(ParticleCanvas),
+            60
+        );
+
+        /// <summary>
+        /// Amount of particles to add on drag when <see cref="AddParticlesOnDrag"/> is true.
+        /// </summary>
+        public int DragParticleCount
+        {
+            get => (int) GetValue(DragParticleCountProperty);
+            set => SetValue(DragParticleCountProperty, value);
+        }
+
+        public static readonly BindableProperty DragParticleMoveTypeProperty = BindableProperty.Create(
+            nameof(DragParticleMoveType),
+            typeof(ParticleMoveType),
+            typeof(ParticleCanvas),
+            ParticleMoveType.Fall
+        );
+
+        /// <summary>
+        /// particle movement type while dragging
+        /// </summary>
+        public ParticleMoveType DragParticleMoveType
+        {
+            get => (ParticleMoveType) GetValue(DragParticleMoveTypeProperty);
+            set => SetValue(DragParticleMoveTypeProperty, value);
         }
     }
 }
