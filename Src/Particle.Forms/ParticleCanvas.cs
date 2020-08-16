@@ -36,11 +36,13 @@ namespace Particle.Forms
         }
 
         public bool IsActive { get; set; }
+        public bool IsAddingParticles { get; set; }
 
         public void Start()
         {
             _stopwatch.Restart();
             IsActive = true;
+            IsAddingParticles = true;
             Device.StartTimer(TimeSpan.FromMilliseconds(16), () =>
             {
                 _totalElapsedMillis = _stopwatch.ElapsedMilliseconds;
@@ -50,16 +52,18 @@ namespace Particle.Forms
                 // Remove those out of view
                 _particles.RemoveAll(particle => !SKRect.Create(SKPoint.Empty, this.CanvasSize).Contains(SKRect.Create(particle.Position, particle.Size)));
 
-                // Add fresh ones
-                var startPositionCount = 9;
-                var startPointSpacing = this.CanvasSize.Width / startPositionCount;
+                // Add fresh ones if not specified otherwise
+                if (IsAddingParticles)
+                {
+                    var startPositionCount = 9;
+                    var startPointSpacing = this.CanvasSize.Width / startPositionCount;
 
-                _particles.AddRange(_particleGenerator.GenerateFallingParticles(
-                    Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
-                    ParticlesPerSecond
-                ));
-
-
+                    _particles.AddRange(_particleGenerator.GenerateFallingParticles(
+                        Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
+                        ParticlesPerSecond
+                    ));
+                }
+                
                 if (!IsActive)
                 {
                     _totalElapsedMillis = 0;
@@ -76,6 +80,11 @@ namespace Particle.Forms
         public void Stop()
         {
             IsActive = false;
+        }
+
+        public void StopAddingParticles()
+        {
+            IsAddingParticles = false;
         }
 
         protected override void OnPaintSurface(SKPaintSurfaceEventArgs e)

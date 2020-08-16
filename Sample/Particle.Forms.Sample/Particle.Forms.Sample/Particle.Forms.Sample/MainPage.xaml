@@ -12,7 +12,8 @@
                               Margin="0, 20" 
                               VerticalOptions="FillAndExpand" 
                               HorizontalOptions="FillAndExpand" />
-        <Button Text="Start/Stop" 
+        <Button x:Name="ActionButton"
+                Text="Start" 
                 HorizontalOptions="Center" 
                 Clicked="Button_OnClicked" />
     </StackLayout>
