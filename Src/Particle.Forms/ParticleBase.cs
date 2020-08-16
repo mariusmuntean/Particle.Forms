@@ -38,7 +38,7 @@ namespace Particle.Forms
             canvas.Save();
 
             // Traversed distance speed x time
-            var dist = TranslationSpeed * elapsedMillis;
+            var dist = TranslationSpeed * elapsedMillis * 0.001;
 
             // New position
             var deg2radFactor = 0.0174533;
@@ -79,7 +79,8 @@ namespace Particle.Forms
 
     public class RectParticle : ParticleBase
     {
-        private SKPaint _paint;
+        protected readonly SKPaint Paint;
+        private float _blurFactor;
 
         public RectParticle(SKColor color,
             SKPoint3 rotationSpeed,
@@ -87,24 +88,58 @@ namespace Particle.Forms
             float direction,
             SKPoint3 orientation,
             SKPoint position,
-            SKSize size)
+            SKSize size, float blurFactor)
             : base(rotationSpeed, translationSpeed, direction, orientation, position, size)
         {
-            Color = color;
+            _blurFactor = blurFactor;
 
-            _paint = new SKPaint
+            Paint = new SKPaint
             {
                 IsAntialias = true,
                 Color = color,
-                Style = SKPaintStyle.Fill
+                Style = SKPaintStyle.Fill,
+                ImageFilter = SKImageFilter.CreateBlur(blurFactor, blurFactor)
             };
         }
 
-        public SKColor Color { get; set; }
+        public SKColor Color
+        {
+            get => Paint.Color;
+            set => Paint.Color = value;
+        }
+
+        public float BlurFactor
+        {
+            get => _blurFactor;
+            set
+            {
+                _blurFactor = value;
+                Paint.ImageFilter = SKImageFilter.CreateBlur(_blurFactor, _blurFactor);
+            }
+        }
 
         protected override void Draw(SKCanvas canvas)
         {
-            canvas.DrawRect(Position.X - Size.Width / 2, Position.Y - Size.Height / 2, Size.Width, Size.Height, _paint);
+            canvas.DrawRect(Position.X - Size.Width / 2, Position.Y - Size.Height / 2, Size.Width, Size.Height, Paint);
+        }
+    }
+
+    public class EllipseParticle : RectParticle
+    {
+        public EllipseParticle(SKColor color,
+            SKPoint3 rotationSpeed,
+            float translationSpeed,
+            float direction,
+            SKPoint3 orientation,
+            SKPoint position,
+            SKSize size,
+            float blurFactor) : base(color, rotationSpeed, translationSpeed, direction, orientation, position, size, blurFactor)
+        {
+        }
+
+        protected override void Draw(SKCanvas canvas)
+        {
+            canvas.DrawOval(Position.X, Position.Y, Size.Width, Size.Height, Paint);
         }
     }
 }

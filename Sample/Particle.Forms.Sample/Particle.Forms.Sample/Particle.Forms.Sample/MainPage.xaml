@@ -6,7 +6,7 @@
              xmlns:forms="clr-namespace:Particle.Forms;assembly=Particle.Forms"
              x:Class="Particle.Forms.Sample.MainPage">
 
-    <StackLayout VerticalOptions="FillAndExpand" BackgroundColor="Cornsilk" Margin="20">
+    <StackLayout VerticalOptions="FillAndExpand" Margin="20">
         <forms:ParticleCanvas x:Name="MyParticleCanvas" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" />
         <Button Text="Start/Stop" 
                 HorizontalOptions="Center" 

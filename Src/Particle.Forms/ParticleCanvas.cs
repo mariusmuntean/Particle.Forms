@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
@@ -13,32 +14,39 @@ namespace Particle.Forms
         private RectParticle _rectParticle1;
         private RectParticle _rectParticle2;
 
+        private RandomParticleGenerator _particleGenerator;
+        private List<ParticleBase> _particles;
+
         public ParticleCanvas()
         {
             _stopwatch = new Stopwatch();
 
             _rectParticle1 = new RectParticle(SKColors.Fuchsia,
                 new SKPoint3(90, 90, 90),
-                0.01f,
+                100f,
                 90,
                 new SKPoint3(0, 0, 0),
                 new SKPoint(150, 30),
-                new SKSize(20, 20));
-            
-            _rectParticle2 = new RectParticle(SKColors.Fuchsia,
+                new SKSize(20, 20),
+                0.0f);
+
+            _rectParticle2 = new RectParticle(SKColors.Fuchsia.WithAlpha(128),
                 new SKPoint3(360, 360, 360),
-                0.01f,
+                150f,
                 90,
                 new SKPoint3(0, 0, 0),
                 new SKPoint(300, 30),
-                new SKSize(20, 20));
+                new SKSize(20, 20),
+                3.0f);
+
+            _particleGenerator = new RandomParticleGenerator();
         }
 
         public bool IsActive { get; set; }
 
         public void Start()
         {
-            _stopwatch.Start();
+            _stopwatch.Restart();
             IsActive = true;
             Device.StartTimer(TimeSpan.FromMilliseconds(16), () =>
             {
@@ -53,6 +61,12 @@ namespace Particle.Forms
 
                 return IsActive;
             });
+
+            _particles = _particles ?? new List<ParticleBase>();
+            _particles.AddRange(_particleGenerator.Generate(new[]
+            {
+                new SKPoint(this.CanvasSize.Width / 2, this.CanvasSize.Height / 2)
+            }));
         }
 
         public void Stop()
@@ -67,11 +81,16 @@ namespace Particle.Forms
 
             var canvasSize = e.Info.Size;
             var canvas = e.Surface.Canvas;
-            
+
             canvas.Clear();
-            
-            _rectParticle1.Update(canvas, _totalElapsedMillis);
-            _rectParticle2.Update(canvas, _totalElapsedMillis);
+
+            if (IsActive)
+            {
+                _rectParticle1.Update(canvas, _totalElapsedMillis);
+                _rectParticle2.Update(canvas, _totalElapsedMillis);
+
+                _particles?.ForEach(particle => particle.Update(canvas, _totalElapsedMillis));
+            }
         }
     }
 }
