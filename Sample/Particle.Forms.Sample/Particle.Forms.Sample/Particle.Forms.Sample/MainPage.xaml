@@ -6,16 +6,41 @@
              xmlns:forms="clr-namespace:Particle.Forms;assembly=Particle.Forms"
              x:Class="Particle.Forms.Sample.MainPage">
 
-    <StackLayout VerticalOptions="FillAndExpand" BackgroundColor="White">
-        <forms:ParticleCanvas x:Name="MyParticleCanvas" 
-                              ParticlesPerSecond="1"
-                              Margin="0, 20" 
-                              VerticalOptions="FillAndExpand" 
+    <Grid VerticalOptions="FillAndExpand" 
+          BackgroundColor="White"
+          Margin="0 ,0, 0, 5">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <forms:ParticleCanvas Grid.Column="0"
+                              Grid.ColumnSpan="2"
+                              x:Name="MyParticleCanvas"
+                              TapParticleCount="100"
+                              FallingParticlesPerSecond="60"
+                              Margin="0, 20"
+                              VerticalOptions="FillAndExpand"
                               HorizontalOptions="FillAndExpand" />
-        <Button x:Name="ActionButton"
-                Text="Start" 
-                HorizontalOptions="Center" 
-                Clicked="Button_OnClicked" />
-    </StackLayout>
+
+        <StackLayout Grid.Column="0"
+                     Orientation="Horizontal"
+                     HorizontalOptions="Center"
+                     VerticalOptions="End">
+            <Label Text="Falling Particles" VerticalOptions="Center" />
+            <Switch
+                IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=HasFallingParticles}" />
+        </StackLayout>
+
+        <StackLayout Grid.Column="1"
+                     Orientation="Horizontal"
+                     HorizontalOptions="Center"
+                     VerticalOptions="End">
+            <Label Text="Add on Tap" VerticalOptions="Center" />
+            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=AddParticlesOnTap}" />
+        </StackLayout>
+
+    </Grid>
 
 </ContentPage>
