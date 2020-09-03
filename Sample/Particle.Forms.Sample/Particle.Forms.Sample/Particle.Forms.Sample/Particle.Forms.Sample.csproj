@@ -12,7 +12,7 @@
 
     <ItemGroup>
         <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.1" />
-        <PackageReference Include="Xamarin.Forms" Version="4.6.0.1073" />
+        <PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />
     </ItemGroup>
 
     <ItemGroup>
