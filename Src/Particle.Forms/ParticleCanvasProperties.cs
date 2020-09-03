@@ -17,13 +17,16 @@ namespace Particle.Forms
             {
                 if (AddParticlesOnTap || AddParticlesOnDrag)
                 {
-                    Touch -= OnTouch;
+                    // Touch -= OnTouch;
+                    _removeTouchHandler(OnTouch);
                     EnableTouchEvents = true;
-                    Touch += OnTouch;
+                    // Touch += OnTouch;
+                    _addTouchHandler(OnTouch);
                 }
                 else
                 {
-                    Touch -= OnTouch;
+                    // Touch -= OnTouch;
+                    _removeTouchHandler(OnTouch);
                     EnableTouchEvents = false;
                 }
             }
