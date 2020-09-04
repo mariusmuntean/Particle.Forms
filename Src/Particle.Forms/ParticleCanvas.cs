@@ -2,40 +2,43 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using Xamarin.Forms;
-using Xamarin.Forms.Internals;
 
 namespace Particle.Forms
 {
     public partial class ParticleCanvas : ContentView
     {
         // Vars used for indirection 
-        private SKGLView _skglView;
-        private SKCanvasView _skCanvasView;
+        private readonly SKGLView _skglView;
+        private readonly SKCanvasView _skCanvasView;
 
-        private Func<bool> _getEnableTouchEvents;
-        private Action<bool> _setEnableTouchEvents;
+        private readonly Func<bool> _getEnableTouchEvents;
+        private readonly Action<bool> _setEnableTouchEvents;
 
-        private Action<EventHandler<SKTouchEventArgs>> _addTouchHandler;
-        private Action<EventHandler<SKTouchEventArgs>> _removeTouchHandler;
+        private readonly Action<EventHandler<SKTouchEventArgs>> _addTouchHandler;
+        private readonly Action<EventHandler<SKTouchEventArgs>> _removeTouchHandler;
 
-        private Action _invalidateSurface;
-        private Func<SKSize> _getCanvasSize;
+        private readonly Action _invalidateSurface;
+        private readonly Func<SKSize> _getCanvasSize;
 
         // Normal vars
-        private Stopwatch _stopwatch;
+        private readonly Stopwatch _stopwatch;
         private long _totalElapsedMillis;
-        private RandomParticleGenerator _particleGenerator;
-        private List<ParticleBase> _particles;
-        private object _particleLock = new object();
+        private readonly RandomParticleGenerator _particleGenerator;
+        private readonly List<ParticleBase> _particles;
+        private readonly object _particleLock = new object();
+        private int _fallingParticlesPerFrame;
 
         public ParticleCanvas()
         {
             _stopwatch = new Stopwatch();
             _particles ??= new List<ParticleBase>();
             _particleGenerator = new RandomParticleGenerator();
+            
+            _fallingParticlesPerFrame = (int) Math.Ceiling(FallingParticlesPerSecond / 60.0f);
 
             // SKCanvasView is not fast enough on Android, so let's use an SKGLView 😄
             // Since there isn't a common interface for both SKCanvasView and SKGLView we're using a bit of indirection
@@ -177,34 +180,54 @@ namespace Particle.Forms
             _stopwatch.Restart();
             Device.StartTimer(TimeSpan.FromMilliseconds(16), () =>
             {
-                _totalElapsedMillis = _stopwatch.ElapsedMilliseconds;
-
-                lock (_particleLock)
+                Task.Run(() =>
                 {
+                    // Console.WriteLine($"Timer interval: {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}ms");
+                    _totalElapsedMillis = _stopwatch.ElapsedMilliseconds;
+
+                    var canvasSize = CanvasSize;
+                    
                     // Remove those out of view
-                    _particles.RemoveAll(particle => !SKRect.Create(SKPoint.Empty, CanvasSize).Contains(SKRect.Create(particle.Position, particle.Size)));
+                    lock (_particleLock)
+                    {
+                        _particles.RemoveAll(particle => !SKRect.Create(SKPoint.Empty, canvasSize).Contains(SKRect.Create(particle.Position, particle.Size)));
+                    }
 
                     // Add fresh ones if not specified otherwise
                     if (HasFallingParticles)
                     {
                         var startPositionCount = 9;
-                        var startPointSpacing = CanvasSize.Width / startPositionCount;
+                        var startPointSpacing = canvasSize.Width / startPositionCount;
 
-                        _particles.AddRange(_particleGenerator.GenerateFallingParticles(
+                        var newFallingParticles = _particleGenerator.GenerateFallingParticles(
                             Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
-                            (int) Math.Ceiling(FallingParticlesPerSecond / 60.0d)
-                        ));
+                            _fallingParticlesPerFrame
+                        );
+                        lock (_particleLock)
+                        {
+                            _particles.AddRange(newFallingParticles);
+                        }
                     }
+
+                    // Update the current particles
+                    _particles?.ForEach(particle => particle.Update(_totalElapsedMillis));
 
                     if (!IsActive)
                     {
                         _totalElapsedMillis = 0;
                         _stopwatch.Stop();
-                        _particles.Clear();
+                        lock (_particleLock)
+                        {
+                            _particles.Clear();
+                        }
                     }
-                }
 
-                _invalidateSurface();
+                    // Console.WriteLine($"Compute duration = {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}");
+
+                    Device.BeginInvokeOnMainThread(() => _invalidateSurface());
+
+                    GC.Collect(0);
+                });
 
                 return IsActive;
             });
@@ -220,17 +243,22 @@ namespace Particle.Forms
             OnPaint(e.Surface.Canvas);
         }
 
+        private long surfacePaintDuration = 0l;
+
         private void OnPaint(SKCanvas canvas)
         {
+            surfacePaintDuration = _stopwatch.ElapsedMilliseconds;
             canvas.Clear();
 
             if (IsActive)
             {
                 lock (_particleLock)
                 {
-                    _particles?.ForEach(particle => particle.Update(canvas, _totalElapsedMillis));
+                    _particles?.ForEach(particle => particle.Paint(canvas));
                 }
             }
+
+            // Console.WriteLine($"Surface paint duration: {_stopwatch.ElapsedMilliseconds - surfacePaintDuration}ms");
         }
     }
 }

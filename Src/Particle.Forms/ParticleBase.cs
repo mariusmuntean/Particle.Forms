@@ -35,9 +35,12 @@ namespace Particle.Forms
 
         public SKPoint3 RotationSpeed { get; set; }
 
+        public SKMatrix TransformationMatrix { get; private set; }
 
-        public virtual void Update(SKCanvas canvas, long absoluteElapsedMillis)
+
+        public virtual void Update(long absoluteElapsedMillis)
         {
+            // Determine elapsed time since this particles was created
             var elapsedMillis = absoluteElapsedMillis - _absoluteElapsedMillisPrevious;
             if (_absoluteElapsedMillisPrevious == 0)
             {
@@ -47,8 +50,6 @@ namespace Particle.Forms
 
             _internalAbsoluteMillis += elapsedMillis;
             _absoluteElapsedMillisPrevious = absoluteElapsedMillis;
-
-            canvas.Save();
 
             // Traversed distance = speed x time
             var dist = TranslationSpeed * _internalAbsoluteMillis * 0.001;
@@ -62,7 +63,8 @@ namespace Particle.Forms
                 Y = (float) (dist * Math.Sin(angle))
             };
 
-            var matrix = SKMatrix.CreateTranslation(-Position.X, -Position.Y);
+            TransformationMatrix = SKMatrix.CreateTranslation(-Position.X, -Position.Y);
+
 
             // New Orientation
             Orientation = InitialOrientation + new SKPoint3
@@ -75,12 +77,20 @@ namespace Particle.Forms
             var matrix44 = SKMatrix44.CreateIdentity();
             matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(1, 0, 0, Orientation.X));
             matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 1, 0, Orientation.Y));
-            matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 0, 1, Orientation.Z));
+            TransformationMatrix = TransformationMatrix.PostConcat(matrix44.Matrix);
+            TransformationMatrix = TransformationMatrix.PostConcat(SKMatrix.CreateRotationDegrees(Orientation.Z, 0, 0)); // SKMatrix44 is kinda slow, so I'm avoiding it to rotate around the Z-axis
+            
+            // Translate back
+            TransformationMatrix = TransformationMatrix.PostConcat(SKMatrix.CreateTranslation(Position.X, Position.Y));
 
-            // Apply transforms
-            matrix = matrix.PostConcat(matrix44.Matrix);
-            matrix = matrix.PostConcat(SKMatrix.CreateTranslation(Position.X, Position.Y));
-            canvas.SetMatrix(matrix);
+            matrix44.Dispose();
+        }
+
+        public void Paint(SKCanvas canvas)
+        {
+            canvas.Save();
+
+            canvas.SetMatrix(TransformationMatrix);
 
             Draw(canvas);
 
