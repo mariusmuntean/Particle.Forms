@@ -14,7 +14,6 @@
         <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
         <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
         <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-        <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
         <TargetFrameworkVersion>v10.0</TargetFrameworkVersion>
         <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
     </PropertyGroup>
@@ -40,6 +39,11 @@
         <AndroidManagedSymbols>true</AndroidManagedSymbols>
         <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
         <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
+        <AotAssemblies>true</AotAssemblies>
+        <AndroidEnableProfiledAot>true</AndroidEnableProfiledAot>
+        <EnableLLVM>true</EnableLLVM>
+        <AndroidLinkTool>r8</AndroidLinkTool>
+        <AndroidSupportedAbis>armeabi-v7a;x86;arm64-v8a;x86_64</AndroidSupportedAbis>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="Mono.Android" />
@@ -76,7 +80,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Particle.Forms.Sample\Particle.Forms.Sample.csproj">
-            <Project>{F1B6292E-5543-4C12-96F3-B078EB7FFA52}</Project>
+            <Project>{DD900AD1-C0DB-4DBE-A634-9CB15253FFBD}</Project>
             <Name>Particle.Forms.Sample</Name>
         </ProjectReference>
     </ItemGroup>
