@@ -4,31 +4,46 @@ namespace Particle.Forms
 {
     public partial class ParticleCanvas
     {
+        private void DisableTouchInput()
+        {
+            _removeTouchHandler(OnTouch);
+            EnableTouchEvents = false;
+        }
+
+        private void EnableTouchInput()
+        {
+            _removeTouchHandler(OnTouch);
+            EnableTouchEvents = true;
+            _addTouchHandler(OnTouch);
+        }
+
         protected override void OnPropertyChanged(string propertyName = null)
         {
             base.OnPropertyChanged(propertyName);
 
-            if (propertyName == IsActiveProperty.PropertyName && IsActive)
+            if (propertyName == IsActiveProperty.PropertyName)
             {
-                // Start();
-                Start2();
+                if (IsActive)
+                {
+                    StartMainAnimation();
+                    EnableTouchInput();
+                }
+                else
+                {
+                    DisableTouchInput();
+                    StopMainAnimation();
+                }
             }
             else if (propertyName == AddParticlesOnTapProperty.PropertyName
                      || propertyName == AddParticlesOnDragProperty.PropertyName)
             {
                 if (AddParticlesOnTap || AddParticlesOnDrag)
                 {
-                    // Touch -= OnTouch;
-                    _removeTouchHandler(OnTouch);
-                    EnableTouchEvents = true;
-                    // Touch += OnTouch;
-                    _addTouchHandler(OnTouch);
+                    EnableTouchInput();
                 }
                 else
                 {
-                    // Touch -= OnTouch;
-                    _removeTouchHandler(OnTouch);
-                    EnableTouchEvents = false;
+                    DisableTouchInput();
                 }
             }
         }

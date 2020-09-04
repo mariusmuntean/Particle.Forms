@@ -32,13 +32,21 @@
                               HorizontalOptions="FillAndExpand" />
 
         <StackLayout Grid.Column="0"
+                     Grid.Row="0"
+                     Orientation="Horizontal"
+                     HorizontalOptions="Center"
+                     VerticalOptions="End">
+            <Label Text="IsActive" VerticalOptions="Center" TextColor="Red" />
+            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=IsActive}" />
+        </StackLayout>
+        
+        <StackLayout Grid.Column="0"
                      Grid.Row="1"
                      Orientation="Horizontal"
                      HorizontalOptions="Center"
                      VerticalOptions="End">
             <Label Text="Falling Particles" VerticalOptions="Center" TextColor="DodgerBlue" />
-            <Switch
-                IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=HasFallingParticles}" />
+            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=HasFallingParticles}" />
         </StackLayout>
 
         <StackLayout Grid.Column="1"

@@ -10,6 +10,8 @@ namespace Particle.Forms
 {
     public partial class ParticleCanvas : ContentView
     {
+        private const string ParticleAnimationName = "MainParticleAnimation";
+
         // Vars used for indirection 
         private readonly SKGLView _skglView;
         private readonly SKCanvasView _skCanvasView;
@@ -174,12 +176,12 @@ namespace Particle.Forms
             }
         }
 
-        private void Start2()
+        private void StartMainAnimation()
         {
             _stopwatch.Restart();
             var anim = new Animation(async d =>
             {
-                Console.WriteLine($"Timer interval: {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}ms");
+                // Console.WriteLine($"Timer interval: {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}ms");
                 _totalElapsedMillis = _stopwatch.ElapsedMilliseconds;
 
                 var canvasSize = CanvasSize;
@@ -209,22 +211,24 @@ namespace Particle.Forms
                 // Update the current particles
                 _particles.ForEach(particle => particle.Update(_totalElapsedMillis));
 
-                if (!IsActive)
-                {
-                    _totalElapsedMillis = 0;
-                    _stopwatch.Stop();
-                    lock (_particleLock)
-                    {
-                        _particles.Clear();
-                    }
-                }
 
-                GC.Collect(0);
-                Console.WriteLine($"Compute duration = {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}");
+                GC.Collect(0, GCCollectionMode.Optimized, false);
+                // Console.WriteLine($"Compute duration = {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}");
 
                 Device.BeginInvokeOnMainThread(() => _invalidateSurface());
             });
-            anim.Commit(this, "mm", repeat: () => true);
+            anim.Commit(this, ParticleAnimationName, repeat: () => IsActive);
+        }
+
+        private void StopMainAnimation()
+        {
+            this.AbortAnimation(ParticleAnimationName);
+            _totalElapsedMillis = 0;
+            _stopwatch.Stop();
+            lock (_particleLock)
+            {
+                _particles.Clear();
+            }
         }
 
         private void SkglViewOnPaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
@@ -237,11 +241,11 @@ namespace Particle.Forms
             OnPaint(e.Surface.Canvas);
         }
 
-        private long surfacePaintDuration = 0L;
+        private long _surfacePaintDuration = 0L;
 
         private void OnPaint(SKCanvas canvas)
         {
-            surfacePaintDuration = _stopwatch.ElapsedMilliseconds;
+            _surfacePaintDuration = _stopwatch.ElapsedMilliseconds;
             canvas.Clear();
 
             if (IsActive)
@@ -252,7 +256,7 @@ namespace Particle.Forms
                 }
             }
 
-            Console.WriteLine($"Surface paint duration: {_stopwatch.ElapsedMilliseconds - surfacePaintDuration}ms");
+            // Console.WriteLine($"Surface paint duration: {_stopwatch.ElapsedMilliseconds - _surfacePaintDuration}ms");
         }
     }
 }
