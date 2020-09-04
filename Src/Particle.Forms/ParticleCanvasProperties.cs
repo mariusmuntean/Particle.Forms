@@ -10,7 +10,8 @@ namespace Particle.Forms
 
             if (propertyName == IsActiveProperty.PropertyName && IsActive)
             {
-                Start();
+                // Start();
+                Start2();
             }
             else if (propertyName == AddParticlesOnTapProperty.PropertyName
                      || propertyName == AddParticlesOnDragProperty.PropertyName)

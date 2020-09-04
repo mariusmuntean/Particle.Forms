@@ -36,7 +36,7 @@
                      Orientation="Horizontal"
                      HorizontalOptions="Center"
                      VerticalOptions="End">
-            <Label Text="Falling Particles" VerticalOptions="Center" />
+            <Label Text="Falling Particles" VerticalOptions="Center" TextColor="DodgerBlue" />
             <Switch
                 IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=HasFallingParticles}" />
         </StackLayout>
@@ -46,7 +46,7 @@
                      Orientation="Horizontal"
                      HorizontalOptions="Center"
                      VerticalOptions="End">
-            <Label Text="Add on Tap" VerticalOptions="Center" />
+            <Label Text="Add on Tap" VerticalOptions="Center" TextColor="DarkViolet" />
             <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=AddParticlesOnTap}" />
         </StackLayout>
         <StackLayout Grid.Column="1"
@@ -54,7 +54,7 @@
                      Orientation="Horizontal"
                      HorizontalOptions="Center"
                      VerticalOptions="End">
-            <Label Text="Add on Drag" VerticalOptions="Center" />
+            <Label Text="Add on Drag" VerticalOptions="Center" TextColor="Goldenrod" />
             <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=AddParticlesOnDrag}" />
         </StackLayout>
 

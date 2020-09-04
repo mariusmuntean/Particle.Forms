@@ -10,6 +10,12 @@ namespace Particle.Forms
 
         private long _absoluteElapsedMillisPrevious = 0;
         private long _internalAbsoluteMillis = 0;
+        
+        // Caching these matrices speeds up the Update() function a lot
+        private SKMatrix44 _totalRotationMatrix = new SKMatrix44();
+        private SKMatrix44 _xAxisRotationMatrix = new SKMatrix44();
+        private SKMatrix44 _yAxisRotationMatrix = new SKMatrix44();
+        private SKMatrix44 _zAxisRotationMatrix = new SKMatrix44();
 
         public ParticleBase(SKPoint3 rotationSpeed, float translationSpeed, float direction, SKPoint3 orientation, SKPoint position, SKSize size)
         {
@@ -37,7 +43,12 @@ namespace Particle.Forms
 
         public SKMatrix TransformationMatrix { get; private set; }
 
-
+        /// <summary>
+        /// Updates the particle's position and orientation based on the given time
+        /// </summary>
+        /// <para>Call this method first and then <see cref="Paint"/></para>
+        /// <para>This method doesn't need to be called on the UI/Main thread</para>
+        /// <param name="absoluteElapsedMillis"></param>
         public virtual void Update(long absoluteElapsedMillis)
         {
             // Determine elapsed time since this particles was created
@@ -74,18 +85,29 @@ namespace Particle.Forms
                 Z = _internalAbsoluteMillis * 0.001f * RotationSpeed.Z
             };
 
-            var matrix44 = SKMatrix44.CreateIdentity();
-            matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(1, 0, 0, Orientation.X));
-            matrix44.PostConcat(SKMatrix44.CreateRotationDegrees(0, 1, 0, Orientation.Y));
-            TransformationMatrix = TransformationMatrix.PostConcat(matrix44.Matrix);
-            TransformationMatrix = TransformationMatrix.PostConcat(SKMatrix.CreateRotationDegrees(Orientation.Z, 0, 0)); // SKMatrix44 is kinda slow, so I'm avoiding it to rotate around the Z-axis
+            _totalRotationMatrix.SetIdentity();
             
+            _xAxisRotationMatrix.SetRotationAboutDegrees(1, 0, 0, Orientation.X);
+            _totalRotationMatrix.PostConcat(_xAxisRotationMatrix);
+            
+            _yAxisRotationMatrix.SetRotationAboutDegrees(0, 1, 0, Orientation.Y);
+            _totalRotationMatrix.PostConcat(_yAxisRotationMatrix);
+            
+            _zAxisRotationMatrix.SetRotationAboutDegrees(0, 0, 1, Orientation.Z);
+            _totalRotationMatrix.PostConcat(_zAxisRotationMatrix);
+            
+            TransformationMatrix = TransformationMatrix.PostConcat(_totalRotationMatrix.Matrix);
+
             // Translate back
             TransformationMatrix = TransformationMatrix.PostConcat(SKMatrix.CreateTranslation(Position.X, Position.Y));
-
-            matrix44.Dispose();
+            
         }
 
+        /// <summary>
+        /// Paints this particle on the given <see cref="SKCanvas"/> instance.
+        /// </summary>
+        /// <para>Call this method after you called <see cref="Update"/></para>
+        /// <param name="canvas"></param>
         public void Paint(SKCanvas canvas)
         {
             canvas.Save();

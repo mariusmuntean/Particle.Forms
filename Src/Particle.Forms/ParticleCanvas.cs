@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using Xamarin.Forms;
@@ -37,7 +36,7 @@ namespace Particle.Forms
             _stopwatch = new Stopwatch();
             _particles ??= new List<ParticleBase>();
             _particleGenerator = new RandomParticleGenerator();
-            
+
             _fallingParticlesPerFrame = (int) Math.Ceiling(FallingParticlesPerSecond / 60.0f);
 
             // SKCanvasView is not fast enough on Android, so let's use an SKGLView 😄
@@ -175,62 +174,57 @@ namespace Particle.Forms
             }
         }
 
-        private void Start()
+        private void Start2()
         {
             _stopwatch.Restart();
-            Device.StartTimer(TimeSpan.FromMilliseconds(16), () =>
+            var anim = new Animation(async d =>
             {
-                Task.Run(() =>
-                {
-                    // Console.WriteLine($"Timer interval: {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}ms");
-                    _totalElapsedMillis = _stopwatch.ElapsedMilliseconds;
+                Console.WriteLine($"Timer interval: {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}ms");
+                _totalElapsedMillis = _stopwatch.ElapsedMilliseconds;
 
-                    var canvasSize = CanvasSize;
-                    
-                    // Remove those out of view
+                var canvasSize = CanvasSize;
+
+                // Remove those out of view
+                lock (_particleLock)
+                {
+                    _particles.RemoveAll(particle => !SKRect.Create(SKPoint.Empty, canvasSize).Contains(SKRect.Create(particle.Position, particle.Size)));
+                }
+
+                // Add fresh ones if not specified otherwise
+                if (HasFallingParticles)
+                {
+                    var startPositionCount = 9;
+                    var startPointSpacing = canvasSize.Width / startPositionCount;
+
+                    var newFallingParticles = _particleGenerator.GenerateFallingParticles(
+                        Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
+                        _fallingParticlesPerFrame
+                    );
                     lock (_particleLock)
                     {
-                        _particles.RemoveAll(particle => !SKRect.Create(SKPoint.Empty, canvasSize).Contains(SKRect.Create(particle.Position, particle.Size)));
+                        _particles.AddRange(newFallingParticles);
                     }
+                }
 
-                    // Add fresh ones if not specified otherwise
-                    if (HasFallingParticles)
+                // Update the current particles
+                _particles.ForEach(particle => particle.Update(_totalElapsedMillis));
+
+                if (!IsActive)
+                {
+                    _totalElapsedMillis = 0;
+                    _stopwatch.Stop();
+                    lock (_particleLock)
                     {
-                        var startPositionCount = 9;
-                        var startPointSpacing = canvasSize.Width / startPositionCount;
-
-                        var newFallingParticles = _particleGenerator.GenerateFallingParticles(
-                            Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
-                            _fallingParticlesPerFrame
-                        );
-                        lock (_particleLock)
-                        {
-                            _particles.AddRange(newFallingParticles);
-                        }
+                        _particles.Clear();
                     }
+                }
 
-                    // Update the current particles
-                    _particles?.ForEach(particle => particle.Update(_totalElapsedMillis));
+                GC.Collect(0);
+                Console.WriteLine($"Compute duration = {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}");
 
-                    if (!IsActive)
-                    {
-                        _totalElapsedMillis = 0;
-                        _stopwatch.Stop();
-                        lock (_particleLock)
-                        {
-                            _particles.Clear();
-                        }
-                    }
-
-                    // Console.WriteLine($"Compute duration = {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}");
-
-                    Device.BeginInvokeOnMainThread(() => _invalidateSurface());
-
-                    GC.Collect(0);
-                });
-
-                return IsActive;
+                Device.BeginInvokeOnMainThread(() => _invalidateSurface());
             });
+            anim.Commit(this, "mm", repeat: () => true);
         }
 
         private void SkglViewOnPaintSurface(object sender, SKPaintGLSurfaceEventArgs e)
@@ -243,7 +237,7 @@ namespace Particle.Forms
             OnPaint(e.Surface.Canvas);
         }
 
-        private long surfacePaintDuration = 0l;
+        private long surfacePaintDuration = 0L;
 
         private void OnPaint(SKCanvas canvas)
         {
@@ -258,7 +252,7 @@ namespace Particle.Forms
                 }
             }
 
-            // Console.WriteLine($"Surface paint duration: {_stopwatch.ElapsedMilliseconds - surfacePaintDuration}ms");
+            Console.WriteLine($"Surface paint duration: {_stopwatch.ElapsedMilliseconds - surfacePaintDuration}ms");
         }
     }
 }

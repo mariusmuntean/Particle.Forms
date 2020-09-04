@@ -22,7 +22,7 @@ namespace Particle.Forms
             var particles = new ParticleBase[amount];
             var rand = new Random();
 
-            Parallel.For(0, amount, (i, state) =>
+            Parallel.For(0, amount, (i) =>
             {
                 particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(0, 360),}, amount, rand, i);
             });
@@ -34,7 +34,7 @@ namespace Particle.Forms
         {
             var particles = new ParticleBase[amount];
             var rand = new Random();
-            Parallel.For(0, amount, (i, state) =>
+            Parallel.For(0, amount, (i) =>
             {
                 particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(45, 135)}, amount, rand, i);
             });
