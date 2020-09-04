@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using SkiaSharp;
 
 namespace Particle.Forms
@@ -21,11 +22,10 @@ namespace Particle.Forms
             var particles = new ParticleBase[amount];
             var rand = new Random();
 
-
-            for (var i = 0; i < amount; i++)
+            Parallel.For(0, amount, (i, state) =>
             {
                 particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(0, 360),}, amount, rand, i);
-            }
+            });
 
             return particles;
         }
@@ -34,11 +34,10 @@ namespace Particle.Forms
         {
             var particles = new ParticleBase[amount];
             var rand = new Random();
-
-            for (var i = 0; i < amount; i++)
+            Parallel.For(0, amount, (i, state) =>
             {
                 particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(45, 135)}, amount, rand, i);
-            }
+            });
 
             return particles;
         }
