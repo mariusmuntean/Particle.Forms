@@ -49,7 +49,7 @@ namespace Particle.Forms
         }
 
         public static readonly BindableProperty HasFallingParticlesProperty = BindableProperty.Create(
-            nameof(FallingParticlesPerSecond),
+            nameof(HasFallingParticles),
             typeof(bool),
             typeof(ParticleCanvas),
             false
