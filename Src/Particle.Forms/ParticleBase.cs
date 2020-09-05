@@ -49,7 +49,7 @@ namespace Particle.Forms
         /// <para>Call this method first and then <see cref="Paint"/></para>
         /// <para>This method doesn't need to be called on the UI/Main thread</para>
         /// <param name="absoluteElapsedMillis"></param>
-        public virtual void Update(long absoluteElapsedMillis)
+        public virtual void Update(long absoluteElapsedMillis, SKSize scale)
         {
             // Determine elapsed time since this particles was created
             var elapsedMillis = absoluteElapsedMillis - _absoluteElapsedMillisPrevious;
@@ -76,6 +76,8 @@ namespace Particle.Forms
 
             TransformationMatrix = SKMatrix.CreateTranslation(-Position.X, -Position.Y);
 
+            // New Scale
+            TransformationMatrix = TransformationMatrix.PostConcat(SKMatrix.CreateScale(scale.Width, scale.Height));
 
             // New Orientation
             Orientation = InitialOrientation + new SKPoint3

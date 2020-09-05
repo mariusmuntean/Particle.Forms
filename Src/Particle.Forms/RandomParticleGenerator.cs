@@ -59,7 +59,7 @@ namespace Particle.Forms
                         (float) (rand.NextDouble() * 360.0f * 1.2),
                         (float) (rand.NextDouble() * 360.0f * 1.2)
                     ),
-                    (float) (50.0f + rand.NextDouble() * 200),
+                    (float) (100.0f + rand.NextDouble() * 200),
                     direction,
                     new SKPoint3(
                         (float) (rand.NextDouble() * 360.0f),
@@ -68,8 +68,8 @@ namespace Particle.Forms
                     ),
                     startPosition,
                     new SKSize(
-                        (float) (6 + rand.NextDouble() * 16),
-                        (float) (6 + rand.NextDouble() * 16)
+                        (float) (6 + rand.NextDouble() * 5),
+                        (float) (6 + rand.NextDouble() * 5)
                     ),
                     (amount - i - 1) / amount * 6
                 ),
@@ -80,7 +80,7 @@ namespace Particle.Forms
                         (float) (rand.NextDouble() * 360.0f),
                         (float) (rand.NextDouble() * 360.0f)
                     ),
-                    (float) (50.0f + rand.NextDouble() * 200),
+                    (float) (100.0f + rand.NextDouble() * 200),
                     direction,
                     new SKPoint3(
                         (float) (rand.NextDouble() * 360.0f),
@@ -89,8 +89,8 @@ namespace Particle.Forms
                     ),
                     startPosition,
                     new SKSize(
-                        (float) (2 + rand.NextDouble() * 12),
-                        (float) (2 + rand.NextDouble() * 12)
+                        (float) (2 + rand.NextDouble() * 5),
+                        (float) (2 + rand.NextDouble() * 5)
                     ),
                     (amount - i - 1) / amount * 6
                 )

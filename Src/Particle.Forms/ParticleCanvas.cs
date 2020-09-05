@@ -182,7 +182,7 @@ namespace Particle.Forms
         private void StartMainAnimation()
         {
             _stopwatch.Restart();
-            var anim = new Animation(async d =>
+            var anim = new Animation(d =>
             {
                 // Console.WriteLine($"Timer interval: {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}ms");
                 _totalElapsedMillis = _stopwatch.ElapsedMilliseconds;
@@ -213,7 +213,8 @@ namespace Particle.Forms
                 }
 
                 // Update the current particles
-                _particles.ForEach(particle => particle.Update(_totalElapsedMillis));
+                var scale = new SKSize((float) (canvasSize.Width / this.Width), (float) (canvasSize.Height / this.Height));
+                _particles.ForEach(particle => particle.Update(_totalElapsedMillis, scale));
 
 
                 GC.Collect(0, GCCollectionMode.Optimized, false);
