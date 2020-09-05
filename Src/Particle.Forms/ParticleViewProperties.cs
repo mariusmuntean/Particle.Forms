@@ -206,7 +206,7 @@ namespace Particle.Forms
         );
 
         /// <summary>
-        /// particle movement type while dragging
+        /// Particle movement type while dragging
         /// </summary>
         public ParticleMoveType DragParticleMoveType
         {
@@ -217,8 +217,8 @@ namespace Particle.Forms
         
         private SKColor[] _convertedConfettiColors = RandomParticleGenerator.DefaultColors;
         
-        public static readonly BindableProperty ConfettiColorsProperty = BindableProperty.Create(
-            nameof(ConfettiColors),
+        public static readonly BindableProperty ParticleColorsProperty = BindableProperty.Create(
+            nameof(ParticleColors),
             typeof(Color[]),
             typeof(ParticleView),
             RandomParticleGenerator.DefaultColors.Select(skColor => skColor.ToFormsColor()).ToArray(), 
@@ -231,10 +231,10 @@ namespace Particle.Forms
             }
         );
 
-        public Color[] ConfettiColors
+        public Color[] ParticleColors
         {
-            get => (Color[]) GetValue(ConfettiColorsProperty);
-            set => SetValue(ConfettiColorsProperty, value);
+            get => (Color[]) GetValue(ParticleColorsProperty);
+            set => SetValue(ParticleColorsProperty, value);
         }
     }
 }

@@ -29,6 +29,6 @@
                             Margin="0, 20"
                             VerticalOptions="FillAndExpand"
                             HorizontalOptions="FillAndExpand"
-                            ConfettiColors="{StaticResource ConfettiColors}" />
+                            ParticleColors="{StaticResource ConfettiColors}" />
     </Grid>
 </ContentPage>
