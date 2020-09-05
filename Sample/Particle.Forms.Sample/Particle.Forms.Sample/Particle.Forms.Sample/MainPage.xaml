@@ -20,13 +20,14 @@
         <forms:ParticleCanvas x:Name="MyParticleCanvas"
                               FallingParticlesPerSecond="20"
                               IsActive="True"
+                              IsRunning="True"
                               HasFallingParticles="True"
                               Margin="0, 20"
                               VerticalOptions="FillAndExpand"
                               HorizontalOptions="FillAndExpand"
                               InputTransparent="True"/>
 
-        <Label x:Name="ConfettiLabel"
+        <Label x:Name="TitleLabel"
                Text="Particles Sample App"
                TextColor="#29cdff"
                FontSize="36"

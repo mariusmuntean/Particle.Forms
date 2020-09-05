@@ -22,63 +22,61 @@
           BackgroundColor="White"
           Margin="0 ,0, 0, 5">
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
 
-        <forms:ParticleCanvas Grid.Column="0"
-                              Grid.ColumnSpan="2"
-                              Grid.Row="0"
-                              Grid.RowSpan="2"
-                              x:Name="MyParticleCanvas"
+        <forms:ParticleCanvas x:Name="MyParticleCanvas"
                               TapParticleCount="100"
                               FallingParticlesPerSecond="60"
                               DragParticleMoveType="Radiate"
                               Margin="0, 20"
                               VerticalOptions="FillAndExpand"
-                              HorizontalOptions="FillAndExpand" 
-                              ConfettiColors="{StaticResource ConfettiColors}"/>
+                              HorizontalOptions="FillAndExpand"
+                              ConfettiColors="{StaticResource ConfettiColors}" />
+        <Grid VerticalOptions="End">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <StackLayout Grid.Column="0"
+                         Grid.Row="0"
+                         Orientation="Horizontal"
+                         HorizontalOptions="Center"
+                         VerticalOptions="End">
+                <Label Text="IsActive" VerticalOptions="Center" TextColor="Red" />
+                <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=IsActive}" />
+            </StackLayout>
 
-        <StackLayout Grid.Column="0"
-                     Grid.Row="0"
-                     Orientation="Horizontal"
-                     HorizontalOptions="Center"
-                     VerticalOptions="End">
-            <Label Text="IsActive" VerticalOptions="Center" TextColor="Red" />
-            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=IsActive}" />
-        </StackLayout>
-        
-        <StackLayout Grid.Column="0"
-                     Grid.Row="1"
-                     Orientation="Horizontal"
-                     HorizontalOptions="Center"
-                     VerticalOptions="End">
-            <Label Text="Falling Particles" VerticalOptions="Center" TextColor="DodgerBlue" />
-            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=HasFallingParticles}" />
-        </StackLayout>
+            <StackLayout Grid.Column="0"
+                         Grid.Row="1"
+                         Orientation="Horizontal"
+                         HorizontalOptions="Center"
+                         VerticalOptions="End">
+                <Label Text="Falling Particles" VerticalOptions="Center" TextColor="DodgerBlue" />
+                <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=HasFallingParticles}" />
+            </StackLayout>
 
-        <StackLayout Grid.Column="1"
-                     Grid.Row="0"
-                     Orientation="Horizontal"
-                     HorizontalOptions="Center"
-                     VerticalOptions="End">
-            <Label Text="Add on Tap" VerticalOptions="Center" TextColor="DarkViolet" />
-            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=AddParticlesOnTap}" />
-        </StackLayout>
-        <StackLayout Grid.Column="1"
-                     Grid.Row="1"
-                     Orientation="Horizontal"
-                     HorizontalOptions="Center"
-                     VerticalOptions="End">
-            <Label Text="Add on Drag" VerticalOptions="Center" TextColor="Goldenrod" />
-            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=AddParticlesOnDrag}" />
-        </StackLayout>
-
+            <StackLayout Grid.Column="1"
+                         Grid.Row="0"
+                         Orientation="Horizontal"
+                         HorizontalOptions="Center"
+                         VerticalOptions="End">
+                <Label Text="Add on Tap" VerticalOptions="Center" TextColor="DarkViolet" />
+                <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=AddParticlesOnTap}" />
+            </StackLayout>
+            <StackLayout Grid.Column="1"
+                         Grid.Row="1"
+                         Orientation="Horizontal"
+                         HorizontalOptions="Center"
+                         VerticalOptions="End">
+                <Label Text="Add on Drag" VerticalOptions="Center" TextColor="Goldenrod" />
+                <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=AddParticlesOnDrag}" />
+            </StackLayout>
+        </Grid>
     </Grid>
 
 </ContentPage>
