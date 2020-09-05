@@ -1,7 +1,7 @@
 using System;
 using SkiaSharp;
 
-namespace Particle.Forms
+namespace Particle.Forms.Particles
 {
     public abstract class ParticleBase
     {

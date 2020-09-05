@@ -1,6 +1,6 @@
 using SkiaSharp;
 
-namespace Particle.Forms
+namespace Particle.Forms.Particles
 {
     public class RectParticle : ParticleBase
     {

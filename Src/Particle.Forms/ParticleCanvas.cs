@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Particle.Forms.ParticleGenerators;
+using Particle.Forms.Particles;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using Xamarin.Forms;
@@ -28,7 +30,8 @@ namespace Particle.Forms
         // Normal vars
         private readonly Stopwatch _stopwatch;
         private long _totalElapsedMillis;
-        private readonly RandomParticleGenerator _particleGenerator;
+        private readonly SimpleParticleGenerator _simpleParticleGenerator;
+        private readonly FallingParticleGenerator _fallingParticleGenerator;
         private readonly List<ParticleBase> _particles;
         private readonly object _particleLock = new object();
         private int _fallingParticlesPerFrame;
@@ -37,7 +40,8 @@ namespace Particle.Forms
         {
             _stopwatch = new Stopwatch();
             _particles ??= new List<ParticleBase>();
-            _particleGenerator = new RandomParticleGenerator();
+            _simpleParticleGenerator = new SimpleParticleGenerator();
+            _fallingParticleGenerator = new FallingParticleGenerator();
 
             _fallingParticlesPerFrame = (int) Math.Ceiling(FallingParticlesPerSecond / 60.0f);
 
@@ -143,14 +147,14 @@ namespace Particle.Forms
                 switch (DragParticleMoveType)
                 {
                     case ParticleMoveType.Fall:
-                        _particles.AddRange(_particleGenerator.GenerateFallingParticles(
+                        _particles.AddRange(_fallingParticleGenerator.Generate(
                             new[] {e.Location,},
                             (int) Math.Ceiling(DragParticleCount / 60.0d),
                             _convertedConfettiColors
                         ));
                         break;
                     case ParticleMoveType.Radiate:
-                        _particles.AddRange(_particleGenerator.Generate(
+                        _particles.AddRange(_simpleParticleGenerator.Generate(
                             new[] {e.Location,},
                             (int) Math.Ceiling(DragParticleCount / 60.0d),
                             _convertedConfettiColors
@@ -171,7 +175,7 @@ namespace Particle.Forms
 
             lock (_particleLock)
             {
-                _particles.AddRange(_particleGenerator.Generate(
+                _particles.AddRange(_simpleParticleGenerator.Generate(
                     new[] {e.Location},
                     TapParticleCount,
                     _convertedConfettiColors
@@ -201,7 +205,7 @@ namespace Particle.Forms
                     var startPositionCount = 9;
                     var startPointSpacing = canvasSize.Width / startPositionCount;
 
-                    var newFallingParticles = _particleGenerator.GenerateFallingParticles(
+                    var newFallingParticles = _fallingParticleGenerator.Generate(
                         Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
                         _fallingParticlesPerFrame,
                         _convertedConfettiColors

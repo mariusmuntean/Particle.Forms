@@ -1,8 +1,8 @@
 using System;
-using System.Threading.Tasks;
+using Particle.Forms.Particles;
 using SkiaSharp;
 
-namespace Particle.Forms
+namespace Particle.Forms.ParticleGenerators
 {
     public class RandomParticleGenerator
     {
@@ -17,32 +17,7 @@ namespace Particle.Forms
             SKColors.Red
         };
 
-        public ParticleBase[] Generate(SKPoint[] startPositions, int amount = 25, SKColor[] colors = null)
-        {
-            var particles = new ParticleBase[amount];
-            var rand = new Random();
-
-            Parallel.For(0, amount, (i) =>
-            {
-                particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(0, 360),}, amount, rand, i, colors ?? DefaultColors);
-            });
-
-            return particles;
-        }
-        
-        public ParticleBase[] GenerateFallingParticles(SKPoint[] startPositions, int amount = 25, SKColor[] colors = null)
-        {
-            var particles = new ParticleBase[amount];
-            var rand = new Random();
-            Parallel.For(0, amount, (i) =>
-            {
-                particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(45, 135)}, amount, rand, i, colors ?? DefaultColors);
-            });
-
-            return particles;
-        }
-
-        private RectParticle GetRandomParticle(SKPoint[] startPositions, DirectionRange[] directionRanges, int amount, Random rand, int i, SKColor[] colors)
+        public RectParticle GetRandomParticle(SKPoint[] startPositions, DirectionRange[] directionRanges, int amount, Random rand, int i, SKColor[] colors)
         {
             var directionRange = directionRanges[rand.Next(directionRanges.Length)];
             var direction = (float) (directionRange.MinAngle + rand.NextDouble() * (directionRange.MaxAngle - directionRange.MinAngle));
