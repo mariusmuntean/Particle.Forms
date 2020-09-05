@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Particle.Forms.Sample.iOS",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Particle.Forms", "..\..\Src\Particle.Forms\Particle.Forms.csproj", "{734DDC06-4B5E-43D2-945B-D0E9502586D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Particles.Forms.Sample.macOS", "Particle.Forms.Sample\Particles.Forms.Sample.macOS\Particles.Forms.Sample.macOS.csproj", "{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|iPhone = Ad-Hoc|iPhone
@@ -100,5 +102,21 @@ Global
 		{734DDC06-4B5E-43D2-945B-D0E9502586D0}.Release|iPhone.Build.0 = Release|Any CPU
 		{734DDC06-4B5E-43D2-945B-D0E9502586D0}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{734DDC06-4B5E-43D2-945B-D0E9502586D0}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Ad-Hoc|iPhone.ActiveCfg = Debug|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Ad-Hoc|iPhone.Build.0 = Debug|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.AppStore|iPhone.ActiveCfg = Debug|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.AppStore|iPhone.Build.0 = Debug|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Debug|Any CPU.Build.0 = Debug|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Debug|iPhone.ActiveCfg = Debug|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Debug|iPhone.Build.0 = Debug|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Debug|iPhoneSimulator.ActiveCfg = Debug|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Debug|iPhoneSimulator.Build.0 = Debug|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Release|Any CPU.ActiveCfg = Release|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Release|Any CPU.Build.0 = Release|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Release|iPhone.ActiveCfg = Release|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Release|iPhone.Build.0 = Release|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Release|iPhoneSimulator.ActiveCfg = Release|x86
+		{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}.Release|iPhoneSimulator.Build.0 = Release|x86
 	EndGlobalSection
 EndGlobal

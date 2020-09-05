@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+        <ProjectGuid>{19872DF1-C1D2-4947-BAD7-DB45FEBB9594}</ProjectGuid>
+        <ProjectTypeGuids>{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>Particles.Forms.Sample.macOS</RootNamespace>
+        <AssemblyName>Particles.Forms.Sample.macOS</AssemblyName>
+        <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+        <TargetFrameworkIdentifier>Xamarin.Mac</TargetFrameworkIdentifier>
+        <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+        <LangVersion>8</LangVersion>
+        <RuntimeIdentifiers>osx;osx-x86;osx-x64</RuntimeIdentifiers>
+        <NuGetRuntimeIdentifier>osx</NuGetRuntimeIdentifier>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug</OutputPath>
+        <DefineConstants>DEBUG;</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <EnableCodeSigning>false</EnableCodeSigning>
+        <CodeSigningKey>Mac Developer</CodeSigningKey>
+        <CreatePackage>false</CreatePackage>
+        <EnablePackageSigning>false</EnablePackageSigning>
+        <IncludeMonoRuntime>false</IncludeMonoRuntime>
+        <UseSGen>true</UseSGen>
+        <UseRefCounting>true</UseRefCounting>
+        <PlatformTarget>x86</PlatformTarget>
+        <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+        <AOTMode>None</AOTMode>
+        <XamMacArch>x86_64</XamMacArch>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release</OutputPath>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <EnableCodeSigning>false</EnableCodeSigning>
+        <CreatePackage>true</CreatePackage>
+        <EnablePackageSigning>false</EnablePackageSigning>
+        <IncludeMonoRuntime>true</IncludeMonoRuntime>
+        <UseSGen>true</UseSGen>
+        <UseRefCounting>true</UseRefCounting>
+        <LinkMode>SdkOnly</LinkMode>
+        <PlatformTarget>x86</PlatformTarget>
+        <MtouchLink>SdkOnly</MtouchLink>
+        <AOTMode>All</AOTMode>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="Xamarin.Mac" />
+    </ItemGroup>
+    <ItemGroup>
+        <ImageAsset Include="Assets.xcassets\Contents.json" />
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Resources\" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="Info.plist" />
+        <None Include="Entitlements.plist" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Main.cs" />
+        <Compile Include="AppDelegate.cs" />
+        <Compile Include="ViewController.cs" />
+        <Compile Include="ViewController.designer.cs">
+            <DependentUpon>ViewController.cs</DependentUpon>
+        </Compile>
+    </ItemGroup>
+    <ItemGroup>
+        <InterfaceDefinition Include="Main.storyboard" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.1" />
+      <PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Particle.Forms.Sample\Particle.Forms.Sample.csproj">
+        <Project>{dd900ad1-c0db-4dbe-a634-9cb15253ffbd}</Project>
+        <Name>Particle.Forms.Sample</Name>
+      </ProjectReference>
+    </ItemGroup>
+    <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+</Project>
