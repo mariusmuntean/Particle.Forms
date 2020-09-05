@@ -10,5 +10,19 @@ namespace Particle.Forms.Sample
         {
             InitializeComponent();
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            MyParticleCanvas.IsRunning = true;
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+
+            MyParticleCanvas.IsRunning = false;
+        }
     }
 }

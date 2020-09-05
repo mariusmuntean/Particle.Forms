@@ -95,7 +95,7 @@ namespace Particle.Forms
         {
             base.OnParentSet();
 
-            IsActive = true;
+            StartMainAnimation();
         }
 
         public bool EnableTouchEvents
@@ -185,7 +185,7 @@ namespace Particle.Forms
 
         private void StartMainAnimation()
         {
-            _stopwatch.Restart();
+            _stopwatch.Start();
             var anim = new Animation(d =>
             {
                 // Console.WriteLine($"Timer interval: {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}ms");
@@ -233,11 +233,19 @@ namespace Particle.Forms
         {
             this.AbortAnimation(ParticleAnimationName);
             _totalElapsedMillis = 0;
-            _stopwatch.Stop();
+            _stopwatch.Reset();
             lock (_particleLock)
             {
                 _particles.Clear();
             }
+
+            _invalidateSurface();
+        }
+        
+        private void PauseMainAnimation()
+        {
+            this.AbortAnimation(ParticleAnimationName);
+            _stopwatch.Stop();
         }
 
         private void SkglViewOnPaintSurface(object sender, SKPaintGLSurfaceEventArgs e)

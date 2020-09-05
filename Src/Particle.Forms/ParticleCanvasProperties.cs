@@ -29,13 +29,18 @@ namespace Particle.Forms
             {
                 if (IsActive)
                 {
-                    StartMainAnimation();
                     EnableTouchInput();
+                    if (IsRunning)
+                    {
+                        StartMainAnimation();
+                    }
                 }
                 else
                 {
                     DisableTouchInput();
                     StopMainAnimation();
+
+                    IsRunning = false;
                 }
             }
             else if (propertyName == AddParticlesOnTapProperty.PropertyName
@@ -50,22 +55,49 @@ namespace Particle.Forms
                     DisableTouchInput();
                 }
             }
+            else if(propertyName == IsRunningProperty.PropertyName && IsActive)
+            {
+                if (IsRunning)
+                {
+                    StartMainAnimation();
+                }
+                else
+                {
+                    PauseMainAnimation();
+                }
+            }
         }
 
         public static readonly BindableProperty IsActiveProperty = BindableProperty.Create(
             nameof(IsActive),
             typeof(bool),
             typeof(ParticleCanvas),
-            false
+            true
         );
 
         /// <summary>
-        /// Whether or not the particles should be displayed.
+        /// Whether or not the control is displaying particles.
         /// </summary>
         public bool IsActive
         {
             get => (bool) GetValue(IsActiveProperty);
             set => SetValue(IsActiveProperty, value);
+        }
+        
+        public static readonly BindableProperty IsRunningProperty = BindableProperty.Create(
+            nameof(IsRunning),
+            typeof(bool),
+            typeof(ParticleCanvas),
+            true
+        );
+
+        /// <summary>
+        /// Whether or not the control is animating particles
+        /// </summary>
+        public bool IsRunning
+        {
+            get => (bool) GetValue(IsRunningProperty);
+            set => SetValue(IsRunningProperty, value);
         }
 
         public static readonly BindableProperty HasFallingParticlesProperty = BindableProperty.Create(

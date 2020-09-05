@@ -16,7 +16,7 @@ namespace Particle.Forms.Sample
             Color.PaleVioletRed,
             Color.LawnGreen,
             Color.LightPink,
-            Color.DarkTurquoise, 
+            Color.DarkTurquoise,
             Color.Goldenrod,
             Color.DarkViolet,
             Color.Red
@@ -35,8 +35,9 @@ namespace Particle.Forms.Sample
             base.OnAppearing();
 
             _parentAnimation ??= GetTitleAnimation();
+            _parentAnimation.Commit(this, TitleAnimationName, length: _totalAnimationDuration, easing: Easing.CubicOut, repeat: () => true);
 
-            _parentAnimation.Commit(this, TitleAnimationName, length: _totalAnimationDuration, easing:Easing.CubicOut, repeat: () => true);
+            MyParticleCanvas.IsRunning = true;
         }
 
         protected override void OnDisappearing()
@@ -44,6 +45,8 @@ namespace Particle.Forms.Sample
             base.OnDisappearing();
 
             this.AbortAnimation(TitleAnimationName);
+
+            MyParticleCanvas.IsRunning = false;
         }
 
         private async void Demo1Btn_OnClicked(object sender, EventArgs e)
