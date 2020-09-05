@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Particle.Forms.Sample
@@ -54,8 +55,9 @@ namespace Particle.Forms.Sample
             await Navigation.PushAsync(new Demo1());
         }
 
-        private void Demo2Btn_OnClicked(object sender, EventArgs e)
+        private async void Demo2Btn_OnClicked(object sender, EventArgs e)
         {
+            await Navigation.PushAsync(new Demo2.Demo2());
         }
 
         private Animation GetTitleAnimation()

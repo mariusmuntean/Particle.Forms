@@ -10,7 +10,10 @@ using Xamarin.Forms;
 
 namespace Particle.Forms
 {
-    public partial class ParticleCanvas : ContentView
+    /// <summary>
+    /// Displays particles. Supports particles falling from the top edge to the bottom edge or radiating from a touch point.
+    /// </summary>
+    public partial class ParticleView : ContentView
     {
         private const string ParticleAnimationName = "MainParticleAnimation";
 
@@ -30,18 +33,16 @@ namespace Particle.Forms
         // Normal vars
         private readonly Stopwatch _stopwatch;
         private long _totalElapsedMillis;
-        private readonly SimpleParticleGenerator _simpleParticleGenerator;
-        private readonly FallingParticleGenerator _fallingParticleGenerator;
         private readonly List<ParticleBase> _particles;
         private readonly object _particleLock = new object();
-        private int _fallingParticlesPerFrame;
+        private readonly int _fallingParticlesPerFrame;
 
-        public ParticleCanvas()
+        public ParticleView()
         {
             _stopwatch = new Stopwatch();
             _particles ??= new List<ParticleBase>();
-            _simpleParticleGenerator = new SimpleParticleGenerator();
-            _fallingParticleGenerator = new FallingParticleGenerator();
+            TouchParticleGenerator = new SimpleParticleGenerator();
+            FallingParticleGenerator = new FallingParticleGenerator();
 
             _fallingParticlesPerFrame = (int) Math.Ceiling(FallingParticlesPerSecond / 60.0f);
 
@@ -104,6 +105,9 @@ namespace Particle.Forms
             set => _setEnableTouchEvents(value);
         }
 
+        public IParticleGenerator TouchParticleGenerator { get; set; }
+        public IParticleGenerator FallingParticleGenerator { get; set; }
+        
         public SKSize CanvasSize => _getCanvasSize();
 
         private void OnTouch(object sender, SKTouchEventArgs e)
@@ -147,14 +151,14 @@ namespace Particle.Forms
                 switch (DragParticleMoveType)
                 {
                     case ParticleMoveType.Fall:
-                        _particles.AddRange(_fallingParticleGenerator.Generate(
+                        _particles.AddRange(FallingParticleGenerator.Generate(
                             new[] {e.Location,},
                             (int) Math.Ceiling(DragParticleCount / 60.0d),
                             _convertedConfettiColors
                         ));
                         break;
                     case ParticleMoveType.Radiate:
-                        _particles.AddRange(_simpleParticleGenerator.Generate(
+                        _particles.AddRange(TouchParticleGenerator.Generate(
                             new[] {e.Location,},
                             (int) Math.Ceiling(DragParticleCount / 60.0d),
                             _convertedConfettiColors
@@ -175,7 +179,7 @@ namespace Particle.Forms
 
             lock (_particleLock)
             {
-                _particles.AddRange(_simpleParticleGenerator.Generate(
+                _particles.AddRange(TouchParticleGenerator.Generate(
                     new[] {e.Location},
                     TapParticleCount,
                     _convertedConfettiColors
@@ -205,7 +209,7 @@ namespace Particle.Forms
                     var startPositionCount = 9;
                     var startPointSpacing = canvasSize.Width / startPositionCount;
 
-                    var newFallingParticles = _fallingParticleGenerator.Generate(
+                    var newFallingParticles = FallingParticleGenerator.Generate(
                         Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
                         _fallingParticlesPerFrame,
                         _convertedConfettiColors

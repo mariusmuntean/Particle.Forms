@@ -23,7 +23,7 @@
           Margin="0 ,0, 0, 5">
 
 
-        <forms:ParticleCanvas x:Name="MyParticleCanvas"
+        <forms:ParticleView x:Name="MyParticleCanvas"
                               TapParticleCount="100"
                               FallingParticlesPerSecond="60"
                               DragParticleMoveType="Radiate"

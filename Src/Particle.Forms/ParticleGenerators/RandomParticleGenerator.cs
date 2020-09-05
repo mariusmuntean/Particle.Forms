@@ -17,7 +17,7 @@ namespace Particle.Forms.ParticleGenerators
             SKColors.Red
         };
 
-        public RectParticle GetRandomParticle(SKPoint[] startPositions, DirectionRange[] directionRanges, int amount, Random rand, int i, SKColor[] colors)
+        public ParticleBase GetRandomParticle(SKPoint[] startPositions, DirectionRange[] directionRanges, int amount, Random rand, int i, SKColor[] colors)
         {
             var directionRange = directionRanges[rand.Next(directionRanges.Length)];
             var direction = (float) (directionRange.MinAngle + rand.NextDouble() * (directionRange.MaxAngle - directionRange.MinAngle));

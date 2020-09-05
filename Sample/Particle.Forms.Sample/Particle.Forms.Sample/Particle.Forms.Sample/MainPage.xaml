@@ -10,14 +10,9 @@
 
     <Grid VerticalOptions="FillAndExpand"
           Margin="0 ,0, 0, 5">
-
-        <StackLayout VerticalOptions="Center"
-                     HorizontalOptions="Center">
-            <Button Text="Confetti" BackgroundColor="#29cdff" TextColor="#0f0f0f" Clicked="Demo1Btn_OnClicked" />
-            <Button Text="Demo2" BackgroundColor="#78ff44" TextColor="#0f0f0f" Clicked="Demo2Btn_OnClicked" />
-        </StackLayout>
         
-        <forms:ParticleCanvas x:Name="MyParticleCanvas"
+        
+        <forms:ParticleView x:Name="MyParticleCanvas"
                               FallingParticlesPerSecond="20"
                               IsActive="True"
                               IsRunning="True"
@@ -26,6 +21,12 @@
                               VerticalOptions="FillAndExpand"
                               HorizontalOptions="FillAndExpand"
                               InputTransparent="True"/>
+        
+        <StackLayout VerticalOptions="Center"
+                     HorizontalOptions="Center">
+            <Button Text="Confetti" BackgroundColor="#29cdff" TextColor="#0f0f0f" Clicked="Demo1Btn_OnClicked" />
+            <Button Text="Custom Shape" BackgroundColor="#78ff44" TextColor="#0f0f0f" Clicked="Demo2Btn_OnClicked" />
+        </StackLayout>
 
         <Label x:Name="TitleLabel"
                Text="Particles Sample App"

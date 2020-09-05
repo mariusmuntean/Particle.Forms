@@ -19,4 +19,11 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\Src\Particle.Forms\Particle.Forms.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Demo2\Demo2.xaml.cs">
+        <DependentUpon>Demo2.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

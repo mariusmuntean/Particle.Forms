@@ -1,12 +1,13 @@
 using System.Linq;
 using Particle.Forms.ParticleGenerators;
+using Particle.Forms.Particles;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using Xamarin.Forms;
 
 namespace Particle.Forms
 {
-    public partial class ParticleCanvas
+    public partial class ParticleView
     {
         private void DisableTouchInput()
         {
@@ -71,7 +72,7 @@ namespace Particle.Forms
         public static readonly BindableProperty IsActiveProperty = BindableProperty.Create(
             nameof(IsActive),
             typeof(bool),
-            typeof(ParticleCanvas),
+            typeof(ParticleView),
             true
         );
 
@@ -87,7 +88,7 @@ namespace Particle.Forms
         public static readonly BindableProperty IsRunningProperty = BindableProperty.Create(
             nameof(IsRunning),
             typeof(bool),
-            typeof(ParticleCanvas),
+            typeof(ParticleView),
             true
         );
 
@@ -103,7 +104,7 @@ namespace Particle.Forms
         public static readonly BindableProperty HasFallingParticlesProperty = BindableProperty.Create(
             nameof(HasFallingParticles),
             typeof(bool),
-            typeof(ParticleCanvas),
+            typeof(ParticleView),
             false
         );
 
@@ -119,7 +120,7 @@ namespace Particle.Forms
         public static readonly BindableProperty FallingParticlesPerSecondProperty = BindableProperty.Create(
             nameof(FallingParticlesPerSecond),
             typeof(int),
-            typeof(ParticleCanvas),
+            typeof(ParticleView),
             60
         );
 
@@ -135,7 +136,7 @@ namespace Particle.Forms
         public static readonly BindableProperty AddParticlesOnTapProperty = BindableProperty.Create(
             nameof(AddParticlesOnTap),
             typeof(bool),
-            typeof(ParticleCanvas),
+            typeof(ParticleView),
             false
         );
 
@@ -151,7 +152,7 @@ namespace Particle.Forms
         public static readonly BindableProperty TapParticleCountProperty = BindableProperty.Create(
             nameof(TapParticleCount),
             typeof(int),
-            typeof(ParticleCanvas),
+            typeof(ParticleView),
             30
         );
 
@@ -168,7 +169,7 @@ namespace Particle.Forms
         public static readonly BindableProperty AddParticlesOnDragProperty = BindableProperty.Create(
             nameof(AddParticlesOnDrag),
             typeof(bool),
-            typeof(ParticleCanvas),
+            typeof(ParticleView),
             false
         );
 
@@ -184,7 +185,7 @@ namespace Particle.Forms
         public static readonly BindableProperty DragParticleCountProperty = BindableProperty.Create(
             nameof(DragParticleCount),
             typeof(int),
-            typeof(ParticleCanvas),
+            typeof(ParticleView),
             60
         );
 
@@ -200,7 +201,7 @@ namespace Particle.Forms
         public static readonly BindableProperty DragParticleMoveTypeProperty = BindableProperty.Create(
             nameof(DragParticleMoveType),
             typeof(ParticleMoveType),
-            typeof(ParticleCanvas),
+            typeof(ParticleView),
             ParticleMoveType.Fall
         );
 
@@ -219,11 +220,11 @@ namespace Particle.Forms
         public static readonly BindableProperty ConfettiColorsProperty = BindableProperty.Create(
             nameof(ConfettiColors),
             typeof(Color[]),
-            typeof(ParticleCanvas),
+            typeof(ParticleView),
             RandomParticleGenerator.DefaultColors.Select(skColor => skColor.ToFormsColor()).ToArray(), 
             propertyChanged: (bindable, value, newValue) =>
             {
-                if (bindable is ParticleCanvas me && newValue is Color[] newConfettiColors)
+                if (bindable is ParticleView me && newValue is Color[] newConfettiColors)
                 {
                     me._convertedConfettiColors = newConfettiColors.Select(newColor => newColor.ToSKColor()).ToArray();
                 }

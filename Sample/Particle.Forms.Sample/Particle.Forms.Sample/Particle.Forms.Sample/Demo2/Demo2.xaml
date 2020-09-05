@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:forms="clr-namespace:Particle.Forms;assembly=Particle.Forms"
+             x:Class="Particle.Forms.Sample.Demo2.Demo2"
+             Title="Custom Particles">
+    <ContentPage.Resources>
+        <x:Array Type="{x:Type Color}" x:Key="ConfettiColors">
+            <Color>#a864fd</Color>
+            <Color>#29cdff</Color>
+            <Color>#78ff44</Color>
+            <Color>#ff718d</Color>
+            <Color>#fdff6a</Color>
+            <Color>#ffcbf2</Color>
+        </x:Array>
+    </ContentPage.Resources>
+
+    <Grid VerticalOptions="FillAndExpand"
+          BackgroundColor="White"
+          Margin="0 ,0, 0, 5">
+
+
+        <forms:ParticleView x:Name="MyParticleCanvas"
+                            IsActive="True"
+                            IsRunning="True"
+                            HasFallingParticles="True"
+                            FallingParticlesPerSecond="20"
+                            Margin="0, 20"
+                            VerticalOptions="FillAndExpand"
+                            HorizontalOptions="FillAndExpand"
+                            ConfettiColors="{StaticResource ConfettiColors}" />
+    </Grid>
+</ContentPage>

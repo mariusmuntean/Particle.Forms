@@ -1,4 +1,4 @@
-namespace Particle.Forms
+namespace Particle.Forms.Particles
 {
     public enum ParticleMoveType
     {
