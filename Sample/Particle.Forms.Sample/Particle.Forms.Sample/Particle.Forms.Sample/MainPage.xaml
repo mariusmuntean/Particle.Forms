@@ -2,81 +2,39 @@
 
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Particle.Forms.Sample"
              xmlns:forms="clr-namespace:Particle.Forms;assembly=Particle.Forms"
-             xmlns:system="clr-namespace:System;assembly=netstandard"
-             x:Class="Particle.Forms.Sample.MainPage">
-    <ContentPage.Resources>
-        <x:Array Type="{x:Type Color}" x:Key="ConfettiColors">
-            <Color>#a864fd</Color>
-            <Color>#29cdff</Color>
-            <Color>#78ff44</Color>
-            <Color>#ff718d</Color>
-            <Color>#fdff6a</Color>
-            <Color>#ffcbf2</Color>
-        </x:Array>
-    </ContentPage.Resources>
+             x:Class="Particle.Forms.Sample.MainPage"
+             Visual="Material"
+             BackgroundColor="#0f0f0F"
+             NavigationPage.HasNavigationBar="False">
 
     <Grid VerticalOptions="FillAndExpand"
-          BackgroundColor="White"
           Margin="0 ,0, 0, 5">
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <forms:ParticleCanvas Grid.Column="0"
-                              Grid.ColumnSpan="2"
-                              Grid.Row="0"
-                              Grid.RowSpan="2"
-                              x:Name="MyParticleCanvas"
-                              TapParticleCount="100"
-                              FallingParticlesPerSecond="60"
-                              DragParticleMoveType="Radiate"
-                              Margin="0, 20"
-                              VerticalOptions="FillAndExpand"
-                              HorizontalOptions="FillAndExpand" 
-                              ConfettiColors="{StaticResource ConfettiColors}"/>
-
-        <StackLayout Grid.Column="0"
-                     Grid.Row="0"
-                     Orientation="Horizontal"
-                     HorizontalOptions="Center"
-                     VerticalOptions="End">
-            <Label Text="IsActive" VerticalOptions="Center" TextColor="Red" />
-            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=IsActive}" />
+        <StackLayout VerticalOptions="Center"
+                     HorizontalOptions="Center">
+            <Button Text="Confetti" BackgroundColor="#29cdff" TextColor="#0f0f0f" Clicked="Demo1Btn_OnClicked" />
+            <Button Text="Demo2" BackgroundColor="#78ff44" TextColor="#0f0f0f" Clicked="Demo2Btn_OnClicked" />
         </StackLayout>
         
-        <StackLayout Grid.Column="0"
-                     Grid.Row="1"
-                     Orientation="Horizontal"
-                     HorizontalOptions="Center"
-                     VerticalOptions="End">
-            <Label Text="Falling Particles" VerticalOptions="Center" TextColor="DodgerBlue" />
-            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=HasFallingParticles}" />
-        </StackLayout>
+        <forms:ParticleCanvas x:Name="MyParticleCanvas"
+                              FallingParticlesPerSecond="20"
+                              IsActive="True"
+                              HasFallingParticles="True"
+                              Margin="0, 20"
+                              VerticalOptions="FillAndExpand"
+                              HorizontalOptions="FillAndExpand"
+                              InputTransparent="True"/>
 
-        <StackLayout Grid.Column="1"
-                     Grid.Row="0"
-                     Orientation="Horizontal"
-                     HorizontalOptions="Center"
-                     VerticalOptions="End">
-            <Label Text="Add on Tap" VerticalOptions="Center" TextColor="DarkViolet" />
-            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=AddParticlesOnTap}" />
-        </StackLayout>
-        <StackLayout Grid.Column="1"
-                     Grid.Row="1"
-                     Orientation="Horizontal"
-                     HorizontalOptions="Center"
-                     VerticalOptions="End">
-            <Label Text="Add on Drag" VerticalOptions="Center" TextColor="Goldenrod" />
-            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=AddParticlesOnDrag}" />
-        </StackLayout>
+        <Label x:Name="ConfettiLabel"
+               Text="Particles Sample App"
+               TextColor="#29cdff"
+               FontSize="36"
+               FontAttributes="Bold"
+               TextDecorations="Underline"
+               Margin="0, 30"
+               VerticalOptions="Start"
+               HorizontalOptions="Center" />
 
     </Grid>
 

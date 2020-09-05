@@ -30,6 +30,7 @@ namespace Particles.Forms.Sample.macOS
             // Insert code here to initialize your application
 
             Xamarin.Forms.Forms.Init();
+            // Xamarin.Forms.FormsMaterial.Init();
             LoadApplication(new App());
             base.DidFinishLaunching(notification);
         }

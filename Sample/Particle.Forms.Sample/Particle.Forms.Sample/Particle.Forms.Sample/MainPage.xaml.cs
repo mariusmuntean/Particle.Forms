@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System;
+using Xamarin.Forms;
 
 namespace Particle.Forms.Sample
 {
@@ -9,5 +10,13 @@ namespace Particle.Forms.Sample
             InitializeComponent();
         }
 
+        private async void Demo1Btn_OnClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new Demo1());
+        }
+
+        private void Demo2Btn_OnClicked(object sender, EventArgs e)
+        {
+        }
     }
 }

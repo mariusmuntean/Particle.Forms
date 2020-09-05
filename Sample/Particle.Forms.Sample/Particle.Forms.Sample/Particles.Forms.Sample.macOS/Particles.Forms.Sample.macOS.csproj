@@ -81,6 +81,7 @@
     <ItemGroup>
       <PackageReference Include="SkiaSharp.Views.Forms" Version="2.80.1" />
       <PackageReference Include="Xamarin.Forms" Version="4.8.0.1364" />
+      <PackageReference Include="Xamarin.Forms.Visual.Material" Version="4.8.0.1364" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Particle.Forms.Sample\Particle.Forms.Sample.csproj">
