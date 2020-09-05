@@ -145,13 +145,15 @@ namespace Particle.Forms
                     case ParticleMoveType.Fall:
                         _particles.AddRange(_particleGenerator.GenerateFallingParticles(
                             new[] {e.Location,},
-                            (int) Math.Ceiling(DragParticleCount / 60.0d)
+                            (int) Math.Ceiling(DragParticleCount / 60.0d),
+                            _convertedConfettiColors
                         ));
                         break;
                     case ParticleMoveType.Radiate:
                         _particles.AddRange(_particleGenerator.Generate(
                             new[] {e.Location,},
-                            (int) Math.Ceiling(DragParticleCount / 60.0d)
+                            (int) Math.Ceiling(DragParticleCount / 60.0d),
+                            _convertedConfettiColors
                         ));
                         break;
                     default:
@@ -171,7 +173,8 @@ namespace Particle.Forms
             {
                 _particles.AddRange(_particleGenerator.Generate(
                     new[] {e.Location},
-                    TapParticleCount
+                    TapParticleCount,
+                    _convertedConfettiColors
                 ));
             }
         }
@@ -200,7 +203,8 @@ namespace Particle.Forms
 
                     var newFallingParticles = _particleGenerator.GenerateFallingParticles(
                         Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
-                        _fallingParticlesPerFrame
+                        _fallingParticlesPerFrame,
+                        _convertedConfettiColors
                     );
                     lock (_particleLock)
                     {

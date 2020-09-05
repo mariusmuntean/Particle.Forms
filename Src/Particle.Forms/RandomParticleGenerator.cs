@@ -6,7 +6,7 @@ namespace Particle.Forms
 {
     public class RandomParticleGenerator
     {
-        private readonly SKColor[] _defaultColors =
+        public static SKColor[] DefaultColors => new []
         {
             SKColors.DodgerBlue,
             SKColors.CornflowerBlue,
@@ -17,32 +17,32 @@ namespace Particle.Forms
             SKColors.Red
         };
 
-        public ParticleBase[] Generate(SKPoint[] startPositions, int amount = 25)
+        public ParticleBase[] Generate(SKPoint[] startPositions, int amount = 25, SKColor[] colors = null)
         {
             var particles = new ParticleBase[amount];
             var rand = new Random();
 
             Parallel.For(0, amount, (i) =>
             {
-                particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(0, 360),}, amount, rand, i);
+                particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(0, 360),}, amount, rand, i, colors ?? DefaultColors);
             });
 
             return particles;
         }
         
-        public ParticleBase[] GenerateFallingParticles(SKPoint[] startPositions, int amount = 25)
+        public ParticleBase[] GenerateFallingParticles(SKPoint[] startPositions, int amount = 25, SKColor[] colors = null)
         {
             var particles = new ParticleBase[amount];
             var rand = new Random();
             Parallel.For(0, amount, (i) =>
             {
-                particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(45, 135)}, amount, rand, i);
+                particles[i] = GetRandomParticle(startPositions, new[] {new DirectionRange(45, 135)}, amount, rand, i, colors ?? DefaultColors);
             });
 
             return particles;
         }
 
-        private RectParticle GetRandomParticle(SKPoint[] startPositions, DirectionRange[] directionRanges, int amount, Random rand, int i)
+        private RectParticle GetRandomParticle(SKPoint[] startPositions, DirectionRange[] directionRanges, int amount, Random rand, int i, SKColor[] colors)
         {
             var directionRange = directionRanges[rand.Next(directionRanges.Length)];
             var direction = (float) (directionRange.MinAngle + rand.NextDouble() * (directionRange.MaxAngle - directionRange.MinAngle));
@@ -53,7 +53,7 @@ namespace Particle.Forms
             return (rand.NextDouble() > 0.45d) switch
             {
                 true => new RectParticle(
-                    _defaultColors[rand.Next(0, _defaultColors.Length)],
+                    colors[rand.Next(0, colors.Length)],
                     new SKPoint3(
                         (float) (rand.NextDouble() * 360.0f * 1.2),
                         (float) (rand.NextDouble() * 360.0f * 1.2),
@@ -74,7 +74,7 @@ namespace Particle.Forms
                     (amount - i - 1) / amount * 6
                 ),
                 false => new EllipseParticle(
-                    _defaultColors[rand.Next(0, _defaultColors.Length)],
+                    colors[rand.Next(0, colors.Length)],
                     new SKPoint3(
                         (float) (rand.NextDouble() * 360.0f),
                         (float) (rand.NextDouble() * 360.0f),

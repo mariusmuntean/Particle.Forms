@@ -4,7 +4,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Particle.Forms.Sample"
              xmlns:forms="clr-namespace:Particle.Forms;assembly=Particle.Forms"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
              x:Class="Particle.Forms.Sample.MainPage">
+    <ContentPage.Resources>
+        <x:Array Type="{x:Type Color}" x:Key="ConfettiColors">
+            <Color>#a864fd</Color>
+            <Color>#29cdff</Color>
+            <Color>#78ff44</Color>
+            <Color>#ff718d</Color>
+            <Color>#fdff6a</Color>
+            <Color>#ffcbf2</Color>
+        </x:Array>
+    </ContentPage.Resources>
 
     <Grid VerticalOptions="FillAndExpand"
           BackgroundColor="White"
@@ -29,7 +40,8 @@
                               DragParticleMoveType="Radiate"
                               Margin="0, 20"
                               VerticalOptions="FillAndExpand"
-                              HorizontalOptions="FillAndExpand" />
+                              HorizontalOptions="FillAndExpand" 
+                              ConfettiColors="{StaticResource ConfettiColors}"/>
 
         <StackLayout Grid.Column="0"
                      Grid.Row="0"

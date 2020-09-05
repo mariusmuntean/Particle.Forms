@@ -1,3 +1,6 @@
+using System.Linq;
+using SkiaSharp;
+using SkiaSharp.Views.Forms;
 using Xamarin.Forms;
 
 namespace Particle.Forms
@@ -175,6 +178,29 @@ namespace Particle.Forms
         {
             get => (ParticleMoveType) GetValue(DragParticleMoveTypeProperty);
             set => SetValue(DragParticleMoveTypeProperty, value);
+        }
+
+        
+        private SKColor[] _convertedConfettiColors = RandomParticleGenerator.DefaultColors;
+        
+        public static readonly BindableProperty ConfettiColorsProperty = BindableProperty.Create(
+            nameof(ConfettiColors),
+            typeof(Color[]),
+            typeof(ParticleCanvas),
+            RandomParticleGenerator.DefaultColors.Select(skColor => skColor.ToFormsColor()).ToArray(), 
+            propertyChanged: (bindable, value, newValue) =>
+            {
+                if (bindable is ParticleCanvas me && newValue is Color[] newConfettiColors)
+                {
+                    me._convertedConfettiColors = newConfettiColors.Select(newColor => newColor.ToSKColor()).ToArray();
+                }
+            }
+        );
+
+        public Color[] ConfettiColors
+        {
+            get => (Color[]) GetValue(ConfettiColorsProperty);
+            set => SetValue(ConfettiColorsProperty, value);
         }
     }
 }
