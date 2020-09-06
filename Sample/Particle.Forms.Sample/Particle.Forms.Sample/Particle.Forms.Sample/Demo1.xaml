@@ -27,6 +27,7 @@
                               TapParticleCount="100"
                               FallingParticlesPerSecond="60"
                               DragParticleMoveType="Radiate"
+                              ShowDebugInfo="True"
                               Margin="0, 20"
                               VerticalOptions="FillAndExpand"
                               HorizontalOptions="FillAndExpand"
@@ -90,6 +91,15 @@
                          VerticalOptions="End">
                 <Label Text="Add on Drag" VerticalOptions="Center" TextColor="Goldenrod" />
                 <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=AddParticlesOnDrag}" />
+            </StackLayout>
+            <StackLayout Grid.Column="1"
+                         Grid.Row="2"
+                         Margin="0,0,5,0"
+                         Orientation="Horizontal"
+                         HorizontalOptions="End"
+                         VerticalOptions="End">
+                <Label Text="Debug Info" VerticalOptions="Center" TextColor="Goldenrod" />
+                <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=ShowDebugInfo}" />
             </StackLayout>
         </Grid>
     </Grid>

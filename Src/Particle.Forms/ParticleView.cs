@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Particle.Forms.ParticleGenerators;
 using Particle.Forms.Particles;
 using SkiaSharp;
@@ -28,6 +29,18 @@ namespace Particle.Forms
         private Action _invalidateSurface;
         private Func<SKSize> _getCanvasSize;
 
+        // Debug vars
+        private long _onPaintPreviousTotalMillis = 0L;
+        private long _updateParticlesDurationMillis = 0L;
+
+        private readonly SKPaint _debugInfoPaint = new SKPaint()
+        {
+            Color = SKColors.LightGreen,
+            TextSize = 32,
+            Style = SKPaintStyle.StrokeAndFill
+        };
+        private bool _showDebugInfo;
+
         // Normal vars
         private Stopwatch _stopwatch;
         private long _totalElapsedMillis;
@@ -50,11 +63,16 @@ namespace Particle.Forms
             {
                 _particles ??= new List<ParticleBase>();
             }
+
             TouchParticleGenerator = new SimpleParticleGenerator();
             FallingParticleGenerator = new FallingParticleGenerator();
 
-            _fallingParticlesPerFrame = (int)Math.Ceiling(FallingParticlesPerSecond / 60.0f);
+            _fallingParticlesPerFrame = (int) Math.Ceiling(FallingParticlesPerSecond / 60.0f);
 
+            // Debug info
+            _showDebugInfo = ShowDebugInfo;
+            _debugInfoPaint.Color = DebugInfoColor.ToSKColor();
+            
             // SKCanvasView is not fast enough on Android, so let's use an SKGLView 😄
             // Since there isn't a common interface for both SKCanvasView and SKGLView we're using a bit of indirection
             if (UseSKGLView)
@@ -154,15 +172,15 @@ namespace Particle.Forms
                 {
                     case ParticleMoveType.Fall:
                         _particles.AddRange(FallingParticleGenerator.Generate(
-                            new[] { e.Location, },
-                            (int)Math.Ceiling(DragParticleCount / 60.0d),
+                            new[] {e.Location,},
+                            (int) Math.Ceiling(DragParticleCount / 60.0d),
                             _convertedConfettiColors
                         ));
                         break;
                     case ParticleMoveType.Radiate:
                         _particles.AddRange(TouchParticleGenerator.Generate(
-                            new[] { e.Location, },
-                            (int)Math.Ceiling(DragParticleCount / 60.0d),
+                            new[] {e.Location,},
+                            (int) Math.Ceiling(DragParticleCount / 60.0d),
                             _convertedConfettiColors
                         ));
                         break;
@@ -182,7 +200,7 @@ namespace Particle.Forms
             lock (_particleLock)
             {
                 _particles.AddRange(TouchParticleGenerator.Generate(
-                    new[] { e.Location },
+                    new[] {e.Location},
                     TapParticleCount,
                     _convertedConfettiColors
                 ));
@@ -191,11 +209,9 @@ namespace Particle.Forms
 
         private void StartMainAnimation()
         {
-
             _stopwatch.Start();
             var anim = new Animation(d =>
             {
-                // Console.WriteLine($"Timer interval: {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}ms");
                 _totalElapsedMillis = _stopwatch.ElapsedMilliseconds;
 
                 var canvasSize = CanvasSize;
@@ -213,10 +229,10 @@ namespace Particle.Forms
                     var startPointSpacing = canvasSize.Width / startPositionCount;
 
                     var newFallingParticles = FallingParticleGenerator.Generate(
-                    Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
-                    _fallingParticlesPerFrame,
-                    _convertedConfettiColors
-                );
+                        Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
+                        _fallingParticlesPerFrame,
+                        _convertedConfettiColors
+                    );
                     lock (_particleLock)
                     {
                         _particles.AddRange(newFallingParticles);
@@ -224,17 +240,18 @@ namespace Particle.Forms
                 }
 
                 // Update the current particles
-                var scale = new SKSize((float)(canvasSize.Width / this.Width), (float)(canvasSize.Height / this.Height));
+                var scale = new SKSize((float) (canvasSize.Width / this.Width), (float) (canvasSize.Height / this.Height));
                 foreach (var particle in _particles)
                 {
                     particle.Update(_totalElapsedMillis, scale);
                 }
 
                 GC.Collect(0, GCCollectionMode.Optimized, false);
-                // Console.WriteLine($"Compute duration = {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}");
+
+                // Compute particle update duration
+                Interlocked.Exchange(ref _updateParticlesDurationMillis, _stopwatch.ElapsedMilliseconds - _totalElapsedMillis);
 
                 Device.BeginInvokeOnMainThread(() => _invalidateSurface());
-
             });
             anim.Commit(this, ParticleAnimationName, length: 1000u, repeat: () => IsActive);
         }
@@ -268,25 +285,10 @@ namespace Particle.Forms
             OnPaint(e.Surface.Canvas);
         }
 
-        private long _surfacePaintDuration = 0L;
-
-        SKPaint _fpsPaint = new SKPaint()
-        {
-            Color = SKColors.LightGreen,
-            TextSize = 32,
-            Style = SKPaintStyle.Fill
-        };
-
         private void OnPaint(SKCanvas canvas)
         {
             canvas.Clear();
 
-            var canvasSize = CanvasSize;
-            var scale = canvasSize.Width / this.Width;
-            _fpsPaint.TextSize = (float)(32.0f * scale);
-            var fps = 1000.0f / (_stopwatch.ElapsedMilliseconds - _surfacePaintDuration);
-
-            _surfacePaintDuration = _stopwatch.ElapsedMilliseconds;
 
             if (IsActive)
             {
@@ -299,12 +301,25 @@ namespace Particle.Forms
                 }
             }
 
-            canvas.DrawText($"{fps} FPS",
-                canvasSize.Width * 0.1f,
-                canvasSize.Height * 0.1f,
-                _fpsPaint);
+            if (_showDebugInfo)
+            {
+                var canvasSize = CanvasSize;
+                var scale = (float) (canvasSize.Width / this.Width);
+                _debugInfoPaint.TextSize = 24.0f * scale;
 
-            // Console.WriteLine($"Surface paint duration: {_stopwatch.ElapsedMilliseconds - _surfacePaintDuration}ms");
+                canvas.DrawText($"Frame painted every {_stopwatch.ElapsedMilliseconds - _onPaintPreviousTotalMillis:F1}ms",
+                    canvasSize.Width * 0.05f,
+                    canvasSize.Height * 0.05f,
+                    _debugInfoPaint);
+
+                canvas.DrawText($"Particles updated every {_updateParticlesDurationMillis:F1}ms",
+                    canvasSize.Width * 0.05f,
+                    canvasSize.Height * 0.05f + (_debugInfoPaint.FontMetrics.XHeight * scale),
+                    _debugInfoPaint);
+
+                _onPaintPreviousTotalMillis = _stopwatch.ElapsedMilliseconds;
+            }
+
         }
     }
 }

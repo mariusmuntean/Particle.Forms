@@ -26,10 +26,12 @@
                             IsRunning="True"
                             HasFallingParticles="True"
                             FallingParticlesPerSecond="20"
+                            ShowDebugInfo="False"
+                            DebugInfoColor="Fuchsia"
                             Margin="0, 20"
                             VerticalOptions="FillAndExpand"
                             HorizontalOptions="FillAndExpand"
-                            ParticleColors="{StaticResource ConfettiColors}" >
+                            ParticleColors="{StaticResource ConfettiColors}">
             <forms:ParticleView.UseSKGLView>
                 <OnPlatform x:TypeArguments="x:Boolean">
                     <On Platform="Android" Value="True" />
@@ -37,5 +39,13 @@
                 </OnPlatform>
             </forms:ParticleView.UseSKGLView>
         </forms:ParticleView>
+        
+        <StackLayout Margin="5"
+                     Orientation="Horizontal"
+                     HorizontalOptions="End"
+                     VerticalOptions="End">
+            <Label Text="Debug Info" VerticalOptions="Center" TextColor="Goldenrod" />
+            <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=ShowDebugInfo}" />
+        </StackLayout>
     </Grid>
 </ContentPage>

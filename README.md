@@ -20,6 +20,8 @@ The starting point is the class `ParticleView`.
 | `DragParticleCount` | `60` | Amount of particles to add on drag when `AddParticlesOnDrag` is true. |
 | `DragParticleMoveType` | `ParticleMovetype.Fall` | Particle movement type while dragging. |
 | `UseSKGLView` | `False` on all platforms except Android | Whether or not to use the hardware-accelerated view for drawing. |
+| `ShowDebugInfo` | `False` | Whether or not to show debug information. |
+| `DebugInfoColor` | `LawnGreen` | Color to use when displaying debug information. |
 
 
 These properties aren't bindable.

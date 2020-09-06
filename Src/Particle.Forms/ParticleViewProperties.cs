@@ -67,9 +67,17 @@ namespace Particle.Forms
                     PauseMainAnimation();
                 }
             }
-            else if(propertyName == UseSKGLViewProperty.PropertyName)
+            else if (propertyName == UseSKGLViewProperty.PropertyName)
             {
                 Init();
+            }
+            else if (propertyName == ShowDebugInfoProperty.PropertyName)
+            {
+                _showDebugInfo = ShowDebugInfo;
+            }
+            else if (propertyName == DebugInfoColorProperty.PropertyName)
+            {
+                _debugInfoPaint.Color = DebugInfoColor.ToSKColor();
             }
         }
 
@@ -255,6 +263,39 @@ namespace Particle.Forms
         {
             get => (bool) GetValue(UseSKGLViewProperty);
             set => SetValue(UseSKGLViewProperty, value);
+        }
+
+
+        public static readonly BindableProperty ShowDebugInfoProperty = BindableProperty.Create(
+            nameof(ShowDebugInfo),
+            typeof(bool),
+            typeof(ParticleView),
+            false
+        );
+
+        /// <summary>
+        /// Whether or not to show debug information.
+        /// </summary>
+        public bool ShowDebugInfo
+        {
+            get => (bool) GetValue(ShowDebugInfoProperty);
+            set => SetValue(ShowDebugInfoProperty, value);
+        }
+
+        public static readonly BindableProperty DebugInfoColorProperty = BindableProperty.Create(
+            nameof(DebugInfoColor),
+            typeof(Color),
+            typeof(ParticleView),
+            Color.LawnGreen
+        );
+
+        /// <summary>
+        /// Color to use when displaying debug information.
+        /// </summary>
+        public Color DebugInfoColor
+        {
+            get => (Color) GetValue(DebugInfoColorProperty);
+            set => SetValue(DebugInfoColorProperty, value);
         }
     }
 }
