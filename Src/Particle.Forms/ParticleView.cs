@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using Particle.Forms.ParticleGenerators;
 using Particle.Forms.Particles;
 using SkiaSharp;
@@ -44,48 +47,48 @@ namespace Particle.Forms
             TouchParticleGenerator = new SimpleParticleGenerator();
             FallingParticleGenerator = new FallingParticleGenerator();
 
-            _fallingParticlesPerFrame = (int) Math.Ceiling(FallingParticlesPerSecond / 60.0f);
+            _fallingParticlesPerFrame = (int)Math.Ceiling(FallingParticlesPerSecond / 60.0f);
 
             // SKCanvasView is not fast enough on Android, so let's use an SKGLView 😄
             // Since there isn't a common interface for both SKCanvasView and SKGLView we're using a bit of indirection
             switch (Device.RuntimePlatform)
             {
                 case Device.Android:
-                {
-                    _skglView = new SKGLView();
+                    {
+                        _skglView = new SKGLView();
 
-                    _getCanvasSize = () => _skglView.CanvasSize;
+                        _getCanvasSize = () => _skglView.CanvasSize;
 
-                    _invalidateSurface = () => _skglView.InvalidateSurface();
+                        _invalidateSurface = () => _skglView.InvalidateSurface();
 
-                    _getEnableTouchEvents = () => _skglView.EnableTouchEvents;
-                    _setEnableTouchEvents = enableTouchEvents => _skglView.EnableTouchEvents = enableTouchEvents;
+                        _getEnableTouchEvents = () => _skglView.EnableTouchEvents;
+                        _setEnableTouchEvents = enableTouchEvents => _skglView.EnableTouchEvents = enableTouchEvents;
 
-                    _addTouchHandler = touchHandler => _skglView.Touch += touchHandler;
-                    _removeTouchHandler = touchHandler => _skglView.Touch -= touchHandler;
+                        _addTouchHandler = touchHandler => _skglView.Touch += touchHandler;
+                        _removeTouchHandler = touchHandler => _skglView.Touch -= touchHandler;
 
-                    _skglView.PaintSurface += SkglViewOnPaintSurface;
-                    Content = _skglView;
-                    break;
-                }
+                        _skglView.PaintSurface += SkglViewOnPaintSurface;
+                        Content = _skglView;
+                        break;
+                    }
                 default:
-                {
-                    _skCanvasView = new SKCanvasView();
+                    {
+                        _skCanvasView = new SKCanvasView();
 
-                    _getCanvasSize = () => _skCanvasView.CanvasSize;
+                        _getCanvasSize = () => _skCanvasView.CanvasSize;
 
-                    _invalidateSurface = () => _skCanvasView.InvalidateSurface();
+                        _invalidateSurface = () => _skCanvasView.InvalidateSurface();
 
-                    _getEnableTouchEvents = () => _skCanvasView.EnableTouchEvents;
-                    _setEnableTouchEvents = enableTouchEvents => _skCanvasView.EnableTouchEvents = enableTouchEvents;
+                        _getEnableTouchEvents = () => _skCanvasView.EnableTouchEvents;
+                        _setEnableTouchEvents = enableTouchEvents => _skCanvasView.EnableTouchEvents = enableTouchEvents;
 
-                    _addTouchHandler = touchHandler => _skCanvasView.Touch += touchHandler;
-                    _removeTouchHandler = touchHandler => _skCanvasView.Touch -= touchHandler;
+                        _addTouchHandler = touchHandler => _skCanvasView.Touch += touchHandler;
+                        _removeTouchHandler = touchHandler => _skCanvasView.Touch -= touchHandler;
 
-                    _skCanvasView.PaintSurface += OnPaintSurface;
-                    Content = _skCanvasView;
-                    break;
-                }
+                        _skCanvasView.PaintSurface += OnPaintSurface;
+                        Content = _skCanvasView;
+                        break;
+                    }
             }
 
 
@@ -107,7 +110,7 @@ namespace Particle.Forms
 
         public IParticleGenerator TouchParticleGenerator { get; set; }
         public IParticleGenerator FallingParticleGenerator { get; set; }
-        
+
         public SKSize CanvasSize => _getCanvasSize();
 
         private void OnTouch(object sender, SKTouchEventArgs e)
@@ -152,15 +155,15 @@ namespace Particle.Forms
                 {
                     case ParticleMoveType.Fall:
                         _particles.AddRange(FallingParticleGenerator.Generate(
-                            new[] {e.Location,},
-                            (int) Math.Ceiling(DragParticleCount / 60.0d),
+                            new[] { e.Location, },
+                            (int)Math.Ceiling(DragParticleCount / 60.0d),
                             _convertedConfettiColors
                         ));
                         break;
                     case ParticleMoveType.Radiate:
                         _particles.AddRange(TouchParticleGenerator.Generate(
-                            new[] {e.Location,},
-                            (int) Math.Ceiling(DragParticleCount / 60.0d),
+                            new[] { e.Location, },
+                            (int)Math.Ceiling(DragParticleCount / 60.0d),
                             _convertedConfettiColors
                         ));
                         break;
@@ -180,7 +183,7 @@ namespace Particle.Forms
             lock (_particleLock)
             {
                 _particles.AddRange(TouchParticleGenerator.Generate(
-                    new[] {e.Location},
+                    new[] { e.Location },
                     TapParticleCount,
                     _convertedConfettiColors
                 ));
@@ -189,6 +192,7 @@ namespace Particle.Forms
 
         private void StartMainAnimation()
         {
+
             _stopwatch.Start();
             var anim = new Animation(d =>
             {
@@ -210,10 +214,10 @@ namespace Particle.Forms
                     var startPointSpacing = canvasSize.Width / startPositionCount;
 
                     var newFallingParticles = FallingParticleGenerator.Generate(
-                        Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
-                        _fallingParticlesPerFrame,
-                        _convertedConfettiColors
-                    );
+                    Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
+                    _fallingParticlesPerFrame,
+                    _convertedConfettiColors
+                );
                     lock (_particleLock)
                     {
                         _particles.AddRange(newFallingParticles);
@@ -221,16 +225,19 @@ namespace Particle.Forms
                 }
 
                 // Update the current particles
-                var scale = new SKSize((float) (canvasSize.Width / this.Width), (float) (canvasSize.Height / this.Height));
-                _particles.ForEach(particle => particle.Update(_totalElapsedMillis, scale));
-
+                var scale = new SKSize((float)(canvasSize.Width / this.Width), (float)(canvasSize.Height / this.Height));
+                foreach (var particle in _particles)
+                {
+                    particle.Update(_totalElapsedMillis, scale);
+                }
 
                 GC.Collect(0, GCCollectionMode.Optimized, false);
                 // Console.WriteLine($"Compute duration = {_stopwatch.ElapsedMilliseconds - _totalElapsedMillis}");
 
                 Device.BeginInvokeOnMainThread(() => _invalidateSurface());
+
             });
-            anim.Commit(this, ParticleAnimationName, repeat: () => IsActive);
+            anim.Commit(this, ParticleAnimationName, length: 1000u, repeat: () => IsActive);
         }
 
         private void StopMainAnimation()
@@ -245,7 +252,7 @@ namespace Particle.Forms
 
             _invalidateSurface();
         }
-        
+
         private void PauseMainAnimation()
         {
             this.AbortAnimation(ParticleAnimationName);
