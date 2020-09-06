@@ -20,7 +20,6 @@ namespace Particles.Forms.Sample.macOS
                 Title = "Xamarin.Forms on Mac!",
                 TitleVisibility = NSWindowTitleVisibility.Hidden
             };
-            // choose your own Title here
         }
 
         public override NSWindow MainWindow => _window;

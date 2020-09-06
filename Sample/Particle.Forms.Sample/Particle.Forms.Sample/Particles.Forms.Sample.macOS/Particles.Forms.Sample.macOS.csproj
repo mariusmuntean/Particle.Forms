@@ -34,6 +34,9 @@
         <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
         <AOTMode>None</AOTMode>
         <XamMacArch>x86_64</XamMacArch>
+        <MtouchEnableSGenConc>true</MtouchEnableSGenConc>
+        <EnableSGenConc>true</EnableSGenConc>
+        <Profiling>true</Profiling>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
         <DebugType>pdbonly</DebugType>
@@ -51,6 +54,8 @@
         <PlatformTarget>x86</PlatformTarget>
         <MtouchLink>SdkOnly</MtouchLink>
         <AOTMode>All</AOTMode>
+        <EnableSGenConc>true</EnableSGenConc>
+        <HybridAOT>true</HybridAOT>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="System" />

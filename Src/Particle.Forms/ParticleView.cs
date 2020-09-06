@@ -273,7 +273,10 @@ namespace Particle.Forms
             {
                 lock (_particleLock)
                 {
-                    _particles?.ForEach(particle => particle.Paint(canvas));
+                    foreach (var particle in _particles)
+                    {
+                        particle.Paint(canvas);
+                    }
                 }
             }
 
