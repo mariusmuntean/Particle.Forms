@@ -56,7 +56,7 @@ namespace Particle.Forms
                     DisableTouchInput();
                 }
             }
-            else if(propertyName == IsRunningProperty.PropertyName && IsActive)
+            else if (propertyName == IsRunningProperty.PropertyName && IsActive)
             {
                 if (IsRunning)
                 {
@@ -66,6 +66,10 @@ namespace Particle.Forms
                 {
                     PauseMainAnimation();
                 }
+            }
+            else if(propertyName == UseSKGLViewProperty.PropertyName)
+            {
+                Init();
             }
         }
 
@@ -84,7 +88,7 @@ namespace Particle.Forms
             get => (bool) GetValue(IsActiveProperty);
             set => SetValue(IsActiveProperty, value);
         }
-        
+
         public static readonly BindableProperty IsRunningProperty = BindableProperty.Create(
             nameof(IsRunning),
             typeof(bool),
@@ -214,14 +218,14 @@ namespace Particle.Forms
             set => SetValue(DragParticleMoveTypeProperty, value);
         }
 
-        
+
         private SKColor[] _convertedConfettiColors = RandomParticleGenerator.DefaultColors;
-        
+
         public static readonly BindableProperty ParticleColorsProperty = BindableProperty.Create(
             nameof(ParticleColors),
             typeof(Color[]),
             typeof(ParticleView),
-            RandomParticleGenerator.DefaultColors.Select(skColor => skColor.ToFormsColor()).ToArray(), 
+            RandomParticleGenerator.DefaultColors.Select(skColor => skColor.ToFormsColor()).ToArray(),
             propertyChanged: (bindable, value, newValue) =>
             {
                 if (bindable is ParticleView me && newValue is Color[] newConfettiColors)
@@ -235,6 +239,22 @@ namespace Particle.Forms
         {
             get => (Color[]) GetValue(ParticleColorsProperty);
             set => SetValue(ParticleColorsProperty, value);
+        }
+
+        public static readonly BindableProperty UseSKGLViewProperty = BindableProperty.Create(
+            nameof(UseSKGLView),
+            typeof(bool),
+            typeof(ParticleView),
+            Device.RuntimePlatform == Device.Android
+        );
+
+        /// <summary>
+        /// Whether or not to use the hardware-accelerated view for drawing.
+        /// </summary>
+        public bool UseSKGLView
+        {
+            get => (bool) GetValue(UseSKGLViewProperty);
+            set => SetValue(UseSKGLViewProperty, value);
         }
     }
 }

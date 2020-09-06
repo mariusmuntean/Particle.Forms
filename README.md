@@ -19,6 +19,7 @@ The starting point is the class `ParticleView`.
 | `AddParticlesOnDrag` | `false` | Whether or not to add particles on drag. |
 | `DragParticleCount` | `60` | Amount of particles to add on drag when `AddParticlesOnDrag` is true. |
 | `DragParticleMoveType` | `ParticleMovetype.Fall` | Particle movement type while dragging. |
+| `UseSKGLView` | `False` on all platforms except Android | Whether or not to use the hardware-accelerated view for drawing. |
 
 
 These properties aren't bindable.

@@ -52,7 +52,7 @@
         <MtouchDebug>true</MtouchDebug>
         <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
         <MtouchFastDev>false</MtouchFastDev>
-        <MtouchLink>SdkOnly</MtouchLink>
+        <MtouchLink>None</MtouchLink>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
         <DebugType>none</DebugType>
@@ -116,7 +116,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Particle.Forms.Sample\Particle.Forms.Sample.csproj">
-            <Project>{F1B6292E-5543-4C12-96F3-B078EB7FFA52}</Project>
+            <Project>{DD900AD1-C0DB-4DBE-A634-9CB15253FFBD}</Project>
             <Name>Particle.Forms.Sample</Name>
         </ProjectReference>
     </ItemGroup>
