@@ -13,7 +13,7 @@
         
         
         <forms:ParticleView x:Name="MyParticleCanvas"
-                              FallingParticlesPerSecond="20"
+                              FallingParticlesPerSecond="25.0"
                               IsActive="True"
                               IsRunning="True"
                               HasFallingParticles="True"

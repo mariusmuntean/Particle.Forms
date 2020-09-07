@@ -79,6 +79,10 @@ namespace Particle.Forms
             {
                 _debugInfoPaint.Color = DebugInfoColor.ToSKColor();
             }
+            else if(propertyName == FallingParticlesPerSecondProperty.PropertyName)
+            {
+                _fallingParticlesPerSecond = FallingParticlesPerSecond;
+            }
         }
 
         public static readonly BindableProperty IsActiveProperty = BindableProperty.Create(
@@ -131,17 +135,17 @@ namespace Particle.Forms
 
         public static readonly BindableProperty FallingParticlesPerSecondProperty = BindableProperty.Create(
             nameof(FallingParticlesPerSecond),
-            typeof(int),
+            typeof(float),
             typeof(ParticleView),
-            60
+            60.0f
         );
 
         /// <summary>
         /// Amount of new particles to be added every second when <see cref="HasFallingParticles"/> is true.
         /// </summary>
-        public int FallingParticlesPerSecond
+        public float FallingParticlesPerSecond
         {
-            get => (int) GetValue(FallingParticlesPerSecondProperty);
+            get => (float) GetValue(FallingParticlesPerSecondProperty);
             set => SetValue(FallingParticlesPerSecondProperty, value);
         }
 

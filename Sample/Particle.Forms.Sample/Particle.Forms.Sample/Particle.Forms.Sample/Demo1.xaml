@@ -25,9 +25,10 @@
 
         <forms:ParticleView x:Name="MyParticleCanvas"
                               TapParticleCount="100"
-                              FallingParticlesPerSecond="60"
+                              FallingParticlesPerSecond="10"
                               DragParticleMoveType="Radiate"
                               ShowDebugInfo="True"
+                              DebugInfoColor="Fuchsia"
                               Margin="0, 20"
                               VerticalOptions="FillAndExpand"
                               HorizontalOptions="FillAndExpand"
@@ -39,6 +40,7 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -100,6 +102,27 @@
                          VerticalOptions="End">
                 <Label Text="Debug Info" VerticalOptions="Center" TextColor="Goldenrod" />
                 <Switch IsToggled="{Binding Source={x:Reference MyParticleCanvas}, Path=ShowDebugInfo}" />
+            </StackLayout>
+            <StackLayout Grid.Column="0"
+                         Grid.Row="3"
+                         Grid.ColumnSpan="2"
+                         Margin="5,0"
+                         HorizontalOptions="FillAndExpand"
+                         VerticalOptions="End">
+                <Label VerticalOptions="Center" TextColor="LimeGreen" >
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span Text="New Particles/Second: " />
+                            <Span Text="{Binding Source={x:Reference MyParticleCanvas}, Path=FallingParticlesPerSecond}" />
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+                <Slider Minimum="0" Maximum="250" 
+                        HorizontalOptions="FillAndExpand"
+                        ThumbColor="DeepSkyBlue"
+                        MaximumTrackColor="LimeGreen"
+                        MinimumTrackColor="OrangeRed"
+                        Value="{Binding Source={x:Reference MyParticleCanvas}, Path=FallingParticlesPerSecond, Mode=TwoWay}" ></Slider>
             </StackLayout>
         </Grid>
     </Grid>

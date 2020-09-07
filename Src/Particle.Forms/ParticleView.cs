@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Particle.Forms.ParticleGenerators;
+using Particle.Forms.ParticleRequester;
 using Particle.Forms.Particles;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
@@ -18,6 +19,7 @@ namespace Particle.Forms
     {
         // Constants
         private const string ParticleAnimationName = "MainParticleAnimation";
+        private const uint AnimationRateMillis = 16u;
 
         // Vars used for indirection 
         private Func<bool> _getEnableTouchEvents;
@@ -39,6 +41,7 @@ namespace Particle.Forms
             TextSize = 32,
             Style = SKPaintStyle.StrokeAndFill
         };
+
         private bool _showDebugInfo;
 
         // Normal vars
@@ -46,7 +49,8 @@ namespace Particle.Forms
         private long _totalElapsedMillis;
         private List<ParticleBase> _particles;
         private readonly object _particleLock = new object();
-        private int _fallingParticlesPerFrame;
+        private float _fallingParticlesPerSecond;
+        private RateBasedParticleRequester _particleRequester;
 
         public ParticleView()
         {
@@ -63,16 +67,17 @@ namespace Particle.Forms
             {
                 _particles ??= new List<ParticleBase>();
             }
-
+            _fallingParticlesPerSecond = FallingParticlesPerSecond;
+            _particleRequester = new RateBasedParticleRequester();
+            
             TouchParticleGenerator = new SimpleParticleGenerator();
             FallingParticleGenerator = new FallingParticleGenerator();
 
-            _fallingParticlesPerFrame = (int) Math.Ceiling(FallingParticlesPerSecond / 60.0f);
 
             // Debug info
             _showDebugInfo = ShowDebugInfo;
             _debugInfoPaint.Color = DebugInfoColor.ToSKColor();
-            
+
             // SKCanvasView is not fast enough on Android, so let's use an SKGLView 😄
             // Since there isn't a common interface for both SKCanvasView and SKGLView we're using a bit of indirection
             if (UseSKGLView)
@@ -210,6 +215,8 @@ namespace Particle.Forms
         private void StartMainAnimation()
         {
             _stopwatch.Start();
+            _particleRequester.Reset();
+            
             var anim = new Animation(d =>
             {
                 _totalElapsedMillis = _stopwatch.ElapsedMilliseconds;
@@ -227,10 +234,11 @@ namespace Particle.Forms
                 {
                     var startPositionCount = 9;
                     var startPointSpacing = canvasSize.Width / startPositionCount;
+                    var amountToRequest = _particleRequester.AmountToRequest(_fallingParticlesPerSecond, AnimationRateMillis);
 
                     var newFallingParticles = FallingParticleGenerator.Generate(
                         Enumerable.Range(1, startPositionCount).Select(i => new SKPoint(i * startPointSpacing, 0)).ToArray(),
-                        _fallingParticlesPerFrame,
+                        amountToRequest,
                         _convertedConfettiColors
                     );
                     lock (_particleLock)
@@ -253,7 +261,7 @@ namespace Particle.Forms
 
                 Device.BeginInvokeOnMainThread(() => _invalidateSurface());
             });
-            anim.Commit(this, ParticleAnimationName, length: 1000u, repeat: () => IsActive);
+            anim.Commit(this, ParticleAnimationName, length: 1000u, rate: AnimationRateMillis, repeat: () => IsActive);
         }
 
         private void StopMainAnimation()
@@ -312,14 +320,13 @@ namespace Particle.Forms
                     canvasSize.Height * 0.05f,
                     _debugInfoPaint);
 
-                canvas.DrawText($"Particles updated every {_updateParticlesDurationMillis:F1}ms",
+                canvas.DrawText($"Particles updated every {Interlocked.Read(ref _updateParticlesDurationMillis):F1}ms",
                     canvasSize.Width * 0.05f,
                     canvasSize.Height * 0.05f + (_debugInfoPaint.FontMetrics.XHeight * scale),
                     _debugInfoPaint);
 
                 _onPaintPreviousTotalMillis = _stopwatch.ElapsedMilliseconds;
             }
-
         }
     }
 }
