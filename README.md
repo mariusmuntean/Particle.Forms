@@ -1,6 +1,9 @@
 # Particles.Forms
 A Xamarin.Forms library to display particles e.g. confetti. Should work on all platforms.
 
+Get it from NuGet [![Nuget](https://img.shields.io/nuget/vpre/particle.forms)](https://www.nuget.org/packages/particle.forms/)
+
+## Preview
 <img src="Media/sample.gif" width="640px" />
 
 ## API Reference
@@ -22,7 +25,7 @@ The starting point is the class `ParticleView`.
 | `UseSKGLView` | `False` on all platforms except Android | Whether or not to use the hardware-accelerated view for drawing. |
 | `ShowDebugInfo` | `False` | Whether or not to show debug information. |
 | `DebugInfoColor` | `LawnGreen` | Color to use when displaying debug information. |
-
+<br>
 
 These properties aren't bindable.
 
@@ -31,6 +34,7 @@ These properties aren't bindable.
 | `TouchParticleGenerator` | `SimpleParticleGenerator` | A `ParticleBase` generator to be used when interacting with the `ParticleView` |
 | `FallingParticleGenerator` | `FallingParticleGenerator` | A `ParticleBase` generator to be used when showing particles that fall from the top edge to the bottom |
 | `CanvasSize` | <none>| Contains the current canvas size |
+<br>
 
 ## Usage Sample
 
